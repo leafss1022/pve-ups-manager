@@ -3,7 +3,7 @@
 # Run on Proxmox VE host
 # Usage: bash /opt/pve-ups-manager/scripts/install-nut.sh
 
-set -eo pipefail
+set -eo pipefail 2>/dev/null || set -e
 
 echo "=== PVE UPS Manager: NUT 安装 ==="
 echo ""

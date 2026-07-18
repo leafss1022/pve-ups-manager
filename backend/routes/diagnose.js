@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var diag = require('./lib/diagnose');
+var diag = require("../lib/diagnose");
 
 router.get('/full', async function(req, res) {
   try {

@@ -25,7 +25,7 @@ done
 
 # Wait for all VMs/CTs to stop
 echo "Waiting for all VMs/CTs to stop..." >> "$LOG"
-for i in $(seq 1 30); do
+for ((i=1; i<=30; i++)); do
     running_vm=$(qm list 2>/dev/null | awk '{if(NR>1 && $3=="running") print $1}' | wc -l)
     running_ct=$(pct list 2>/dev/null | awk '{if(NR>1 && $2=="running") print $1}' | wc -l)
     total=$((running_vm + running_ct))

@@ -1,8 +1,9 @@
+set +e
 #!/bin/bash
 # PVE UPS Manager - Quick install script v0.2.0
 # Fixes: self-reexec from curl pipe, robust Node.js install, service health check
 
-set -eo pipefail
+set -eo pipefail 2>/dev/null || set -e
 
 SCRIPT_URL="https://raw.githubusercontent.com/leafss1022/pve-ups-manager/main/scripts/quick-install.sh"
 REPO_URL="https://github.com/leafss1022/pve-ups-manager.git"
