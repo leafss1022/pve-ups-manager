@@ -1,21 +1,20 @@
-set if [[ "$0" == /dev/fd/* ]] || [[ "$0" == "/dev/stdin" ]] || [[ -z "$BASH_SOURCE" ]]; then
-    echo "检测到通过 curl 管道运行，正在获取最新脚本..."
-    if command -v mktemp &>/dev/null; then
-        TMP_SCRIPT=$(mktemp /tmp/pve-ups-install.XXXXXX.sh 2>/dev/null)
-    else
-        TMP_SCRIPT="/tmp/pve-ups-install-$.sh"
-    fi
-    if [ -n "$TMP_SCRIPT" ] && curl -fsSL "$SCRIPT_URL" -o "$TMP_SCRIPT" 2>/dev/null; then
-        chmod +x "$TMP_SCRIPT"
-        exec bash "$TMP_SCRIPT"
-    else
-        echo "警告: 无法下载最新脚本，继续使用当前版本..."
-    fi
-fi
-set -e
+#!/bin/bash
+# PVE UPS Manager - Quick install script v0.3.0
+# Fixes: self-reexec from curl pipe, robust Node.js install, service health check
 
+set -eo pipefail 2>/dev/null || set -e
+
+SCRIPT_URL="https://raw.githubusercontent.com/leafss1022/pve-ups-manager/main/scripts/quick-install.sh"
+REPO_URL="https://github.com/leafss1022/pve-ups-manager.git"
+INSTALL_DIR="/opt/pve-ups-manager"
+
+echo "=== PVE UPS Manager 一键部署(v0.3.0) ==="
+echo ""
+
+# Self-reexec: if running from curl pipe, download fresh copy
+set +e
 if [[ "$0" == /dev/fd/* ]] || [[ "$0" == "/dev/stdin" ]] || [[ -z "$BASH_SOURCE" ]]; then
-    echo "????? curl ?????????????..."
+    echo "检测到通过 curl 管道运行，正在获取最新脚本..."
     if command -v mktemp &>/dev/null; then
         TMP_SCRIPT=$(mktemp /tmp/pve-ups-install.XXXXXX.sh 2>/dev/null)
     else
@@ -25,7 +24,7 @@ if [[ "$0" == /dev/fd/* ]] || [[ "$0" == "/dev/stdin" ]] || [[ -z "$BASH_SOURCE"
         chmod +x "$TMP_SCRIPT"
         exec bash "$TMP_SCRIPT"
     else
-        echo "[??] ?????????????????..."
+        echo "警告: 无法下载最新脚本，继续使用当前版本..."
     fi
 fi
 set -e
