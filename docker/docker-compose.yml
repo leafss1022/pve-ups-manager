@@ -5,7 +5,7 @@ services:
     build: .
     container_name: pve-ups-manager
     ports:
-      - "3456:3456"
+      - "13456:13456"
     volumes:
       - /etc/nut:/etc/nut:ro
       - /etc/apcupsd:/etc/apcupsd:ro

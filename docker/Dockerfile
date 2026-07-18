@@ -12,11 +12,11 @@ COPY backend/ ./
 COPY frontend/public/ /app/frontend/public/
 COPY scripts/ /app/scripts/
 
-EXPOSE 3456
+EXPOSE 13456
 
-ENV PORT=3456
+ENV PORT=13456
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:3456/api/system/info || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://localhost:13456/api/system/info || exit 1
 
 CMD ["node", "app.js"]

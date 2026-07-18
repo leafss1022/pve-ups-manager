@@ -20,7 +20,7 @@
 bash <(curl -sL https://raw.githubusercontent.com/leafss1022/pve-ups-manager/main/scripts/quick-install.sh)
 ```
 
-部署完成后访问 `http://<PVE主机IP>:3456`
+部署完成后访问 `http://<PVE主机IP>:13456`
 
 ### 方式二：手动运行 (Node.js)
 
@@ -31,7 +31,7 @@ cd backend && npm install && cd ..
 npm start
 ```
 
-访问 http://localhost:3456
+访问 http://localhost:13456
 
 ### 方式三：Docker 部署
 

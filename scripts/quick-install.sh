@@ -231,7 +231,7 @@ SERVICE_OK=false
 while [ $RETRY -lt $MAX_RETRIES ]; do
     if systemctl is-active --quiet pve-ups-manager; then
         # Check if the HTTP port is responding
-        if curl -sf --max-time 3 "http://localhost:3456/api/system/info" >/dev/null 2>&1; then
+        if curl -sf --max-time 3 "http://localhost:13456/api/system/info" >/dev/null 2>&1; then
             SERVICE_OK=true
             break
         fi
@@ -249,7 +249,7 @@ if [ "$SERVICE_OK" = true ]; then
     fi
     echo "=== 閮ㄧ讲鎴愬姛锛?==="
     echo ""
-    echo "  璁块棶鍦板潃: http://$HOST_IP:3456"
+    echo "  璁块棶鍦板潃: http://$HOST_IP:13456"
     echo "  绠＄悊鍛戒护: systemctl status pve-ups-manager"
     echo "  鏃ュ織鏌ョ湅: journalctl -u pve-ups-manager -f"
     echo ""
@@ -267,7 +267,7 @@ else
     echo "    cd /opt/pve-ups-manager/backend && node app.js"
     echo ""
     echo "  甯歌闂:"
-    echo "    - 绔彛 3456 琚崰鐢? ss -tlnp | grep 3456"
+    echo "    - 绔彛 13456 琚崰鐢? ss -tlnp | grep 13456"
     echo "    - 鏉冮檺闂: 纭繚浠?root 杩愯"
 fi
 echo ""

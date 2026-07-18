@@ -61,7 +61,7 @@ io.on('connection', function(socket) {
     });
 });
 
-const PORT = process.env.PORT || 3456;
+const PORT = process.env.PORT || 13456;
 server.listen(PORT, '0.0.0.0', () => {
     console.log('PVE UPS Manager running on http://0.0.0.0:' + PORT);
 });
