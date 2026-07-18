@@ -1,6 +1,6 @@
 {
   "name": "pve-ups-manager",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "private": true,
   "scripts": {
     "install": "cd backend && npm install",
