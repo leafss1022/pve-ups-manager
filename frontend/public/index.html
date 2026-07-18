@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -76,32 +76,32 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans S
 <div class="c">
 
 <div class="hdr">
-<h1><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="10" y1="8" x2="10" y2="16"/><line x1="14" y1="10" x2="14" y2="14"/></svg> PVE UPS 绠＄悊鍣?<span>v0.4.1</span></h1>
+<h1><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="10" y1="8" x2="10" y2="16"/><line x1="14" y1="10" x2="14" y2="14"/></svg> PVE UPS 管理器 <span>v0.4.1</span></h1>
 <div class="hdr-act">
-<button class="btn btn-sm" onclick="refreshAll()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> 鍒锋柊</button>
-<span id="connSt" class="bdg" style="font-size:11px">妫€鏌ヨ繛鎺?..</span>
+<button class="btn btn-sm" onclick="refreshAll()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> 刷新</button>
+<span id="connSt" class="bdg" style="font-size:11px">检查连接...</span>
 </div></div>
 
 <div class="grid" id="stats">
-<div class="card"><div class="lb">UPS 鐘舵€?/div><div class="vl yl" id="upsStatus">妫€鏌ヤ腑...</div><div class="sb" id="upsModel"></div></div>
-<div class="card"><div class="lb">鐢垫睜鐢甸噺</div><div class="vl gr" id="upsBattery">--%</div><div class="sb" id="upsBatteryVoltage"></div></div>
-<div class="card"><div class="lb">杈撳叆鐢靛帇</div><div class="vl bl" id="upsInputVoltage">-- V</div><div class="sb" id="upsOutputVoltage"></div></div>
-<div class="card"><div class="lb">璐熻浇</div><div class="vl" id="upsLoad">--%</div><div class="sb" id="upsRuntime"></div></div>
-<div class="card"><div class="lb">杩愯鏃堕棿</div><div class="vl" id="systemUptime">--</div><div class="sb">PVE 涓绘満</div></div>
-<div class="card"><div class="lb">褰撳墠宸ュ叿</div><div class="vl" id="activeTool" style="font-size:16px">妫€娴嬩腑...</div><div class="sb">NUT / apcupsd</div></div>
+<div class="card"><div class="lb">UPS 状态</div><div class="vl yl" id="upsStatus">检查中...</div><div class="sb" id="upsModel"></div></div>
+<div class="card"><div class="lb">电池电量</div><div class="vl gr" id="upsBattery">--%</div><div class="sb" id="upsBatteryVoltage"></div></div>
+<div class="card"><div class="lb">输入电压</div><div class="vl bl" id="upsInputVoltage">-- V</div><div class="sb" id="upsOutputVoltage"></div></div>
+<div class="card"><div class="lb">负载</div><div class="vl" id="upsLoad">--%</div><div class="sb" id="upsRuntime"></div></div>
+<div class="card"><div class="lb">运行时间</div><div class="vl" id="systemUptime">--</div><div class="sb">PVE 主机</div></div>
+<div class="card"><div class="lb">当前工具</div><div class="vl" id="activeTool" style="font-size:16px">检测中...</div><div class="sb">NUT / apcupsd</div></div>
 </div>
 
 <div class="tabs">
-<div class="tab act" onclick="switchTab('nut')">NUT 閰嶇疆</div>
-<div class="tab" onclick="switchTab('apc')">apcupsd 閰嶇疆</div>
-<div class="tab" onclick="switchTab('vms')">铏氭嫙鏈虹鐞?/div>
-<div class="tab" onclick="switchTab('log')">浜嬩欢鏃ュ織</div>
-<div class="tab" onclick="switchTab('set')">璁剧疆</div>
+<div class="tab act" onclick="switchTab('nut')">NUT 配置</div>
+<div class="tab" onclick="switchTab('apc')">apcupsd 配置</div>
+<div class="tab" onclick="switchTab('vms')">虚拟机管理</div>
+<div class="tab" onclick="switchTab('log')">事件日志</div>
+<div class="tab" onclick="switchTab('set')">设置</div>
 </div>
 
 <div class="tc act" id="Tnut">
-<div class="pnl"><div class="pt"><span>NUT 閰嶇疆鏂囦欢</span>
-<div><button class="btn btn-sm btn-p" onclick="loadNut()">鍔犺浇</button><button class="btn btn-sm btn-s" onclick="saveNut()">淇濆瓨</button><button class="btn btn-sm" onclick="restartNut()">閲嶅惎</button></div>
+<div class="pnl"><div class="pt"><span>NUT 配置文件</span>
+<div><button class="btn btn-sm btn-p" onclick="loadNut()">加载</button><button class="btn btn-sm btn-s" onclick="saveNut()">保存</button><button class="btn btn-sm" onclick="restartNut()">重启</button></div>
 </div><div class="pb">
 <div class="csel" id="nutFiles">
 <span class="ctab act" onclick="pickNut('ups.conf',this)">ups.conf</span>
@@ -109,23 +109,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans S
 <span class="ctab" onclick="pickNut('upsd.users',this)">upsd.users</span>
 <span class="ctab" onclick="pickNut('upsmon.conf',this)">upsmon.conf</span>
 </div>
-<textarea class="cfg" id="nutEd" placeholder="鐐瑰嚮鍔犺浇璇诲彇閰嶇疆..."></textarea>
+<textarea class="cfg" id="nutEd" placeholder="点击加载读取配置..."></textarea>
 </div></div>
-<div class="pnl"><div class="pt"><span>NUT 閰嶇疆妯℃澘</span></div>
+<div class="pnl"><div class="pt"><span>NUT 配置模板</span></div>
 <div class="pb" style="font-size:13px;line-height:1.8;color:var(--t2)">
-<p><b>ups.conf</b> 鈥?UPS 璁惧杩炴帴</p>
+<p><b>ups.conf</b> — UPS 设备连接</p>
 <pre style="background:#0b1120;padding:12px;border-radius:4px;margin:8px 0;font-size:12px">[ups]
 driver = usbhid-ups
 port = auto
 desc = &quot;Main UPS&quot;</pre>
-<p><b>upsd.conf</b> 鈥?瀹堟姢杩涚▼鐩戝惉</p>
+<p><b>upsd.conf</b> — 守护进程监听</p>
 <pre style="background:#0b1120;padding:12px;border-radius:4px;margin:8px 0;font-size:12px">LISTEN 127.0.0.1 3493
 LISTEN 0.0.0.0 3493</pre>
-<p><b>upsd.users</b> 鈥?鐢ㄦ埛璁よ瘉</p>
+<p><b>upsd.users</b> — 用户认证</p>
 <pre style="background:#0b1120;padding:12px;border-radius:4px;margin:8px 0;font-size:12px">[monuser]
 password = secret
 upsmon master</pre>
-<p><b>upsmon.conf</b> 鈥?鐩戞帶涓庡叧鏈?/p>
+<p><b>upsmon.conf</b> — 监控与关机</p>
 <pre style="background:#0b1120;padding:12px;border-radius:4px;margin:8px 0;font-size:12px">MONITOR ups@localhost 1 monuser secret master
 SHUTDOWNCMD &quot;/sbin/shutdown -h +0&quot;
 POLLFREQ 5
@@ -138,12 +138,12 @@ POWERDOWNFLAG /etc/killpower</pre>
 </div>
 
 <div class="tc" id="Tapc">
-<div class="pnl"><div class="pt"><span>apcupsd 閰嶇疆</span>
-<div><button class="btn btn-sm btn-p" onclick="loadApc()">鍔犺浇</button><button class="btn btn-sm btn-s" onclick="saveApc()">淇濆瓨</button><button class="btn btn-sm" onclick="restartApc()">閲嶅惎</button></div>
+<div class="pnl"><div class="pt"><span>apcupsd 配置</span>
+<div><button class="btn btn-sm btn-p" onclick="loadApc()">加载</button><button class="btn btn-sm btn-s" onclick="saveApc()">保存</button><button class="btn btn-sm" onclick="restartApc()">重启</button></div>
 </div><div class="pb">
-<textarea class="cfg" id="apcEd" style="min-height:400px" placeholder="鐐瑰嚮鍔犺浇璇诲彇 apcupsd.conf..."></textarea>
+<textarea class="cfg" id="apcEd" style="min-height:400px" placeholder="点击加载读取 apcupsd.conf..."></textarea>
 </div></div>
-<div class="pnl"><div class="pt"><span>apcupsd 蹇€熼厤缃?/span></div>
+<div class="pnl"><div class="pt"><span>apcupsd 快速配置</span></div>
 <div class="pb" style="font-size:13px;line-height:1.8;color:var(--t2)">
 <pre style="background:#0b1120;padding:12px;border-radius:4px;margin:8px 0;font-size:12px">UPSCABLE usb
 UPSTYPE usb
@@ -159,32 +159,32 @@ KILLDELAY 10
 NETSERVER on
 NISIP 0.0.0.0
 NISPORT 3551</pre>
-<p style="margin-top:8px">BATTERYLEVEL=鐢垫睜鐧惧垎姣旇Е鍙?MINUTES=鍓╀綑鍒嗛挓瑙﹀彂 TIMEOUT=鏂數鏈€澶х瓑寰呯鏁?/p>
+<p style="margin-top:8px">BATTERYLEVEL=电池百分比触发 MINUTES=剩余分钟触发 TIMEOUT=断电最大等待秒数</p>
 </div></div>
 </div>
 
 <div class="tc" id="Tvms">
-<div class="pnl"><div class="pt"><span>铏氭嫙鏈?瀹瑰櫒</span>
-<div><button class="btn btn-sm btn-p" onclick="loadVMs()">鍒锋柊</button><button class="btn btn-sm" onclick="showModal()">瀹夊叏鍏虫満</button></div>
-</div><div class="pb" id="vmList"><div class="emp">鐐瑰嚮鍒锋柊鍔犺浇鍒楄〃</div></div></div>
-<div class="pnl"><div class="pt"><span>鏂數鍏虫満娴佺▼</span></div>
+<div class="pnl"><div class="pt"><span>虚拟机/容器</span>
+<div><button class="btn btn-sm btn-p" onclick="loadVMs()">刷新</button><button class="btn btn-sm" onclick="showModal()">安全关机</button></div>
+</div><div class="pb" id="vmList"><div class="emp">点击刷新加载列表</div></div></div>
+<div class="pnl"><div class="pt"><span>断电关机流程</span></div>
 <div class="pb" style="font-size:13px;line-height:1.8;color:var(--t2)">
-<p><b>NUT 鏂规锛?/b></p>
+<p><b>NUT 方案：</b></p>
 <ol style="margin:8px 0 8px 20px">
-<li>UPS 妫€娴嬪競鐢典腑鏂紝閫氳繃 USB/涓插彛閫氱煡 PVE</li>
-<li>upsmon 妫€娴嬬數閲忎綆浜庨槇鍊?(濡?30%)</li>
-<li>upsmon 鎵ц SHUTDOWNCMD 瑙﹀彂鍏虫満鑴氭湰</li>
-<li>鑴氭湰渚濇鍏抽棴鎵€鏈?VM (qm shutdown) 鍜?CT (pct shutdown)</li>
-<li>瀹夸富鏈烘墽琛?shutdown -h now</li>
-<li>甯傜數鎭㈠鍚?PVE 鑷姩鍚姩 (BIOS 閫氱數鑷惎)</li>
+<li>UPS 检测市电中断，通过 USB/串口通知 PVE</li>
+<li>upsmon 检测电量低于阈值 (如 30%)</li>
+<li>upsmon 执行 SHUTDOWNCMD 触发关机脚本</li>
+<li>脚本依次关闭所有 VM (qm shutdown) 和 CT (pct shutdown)</li>
+<li>宿主机执行 shutdown -h now</li>
+<li>市电恢复后 PVE 自动启动 (BIOS 通电自启)</li>
 </ol>
-<p><b>apcupsd 鏂规锛?/b> apccontrol 鑴氭湰璋冪敤鑷畾涔夊叧鏈洪€昏緫</p>
+<p><b>apcupsd 方案：</b> apccontrol 脚本调用自定义关机逻辑</p>
 </div></div>
 </div>
 
 <div class="tc" id="Tlog">
-<div class="pnl"><div class="pt"><span>浜嬩欢鏃ュ織</span><div><button class="btn btn-sm" onclick="clrLog()">娓呯┖</button></div></div>
-<div class="pb"><div class="elog" id="evtLog"><div class="e"><span class="t">[鍚姩]</span><span class="m i">PVE UPS 绠＄悊鍣ㄥ凡鍚姩</span></div></div></div></div>
+<div class="pnl"><div class="pt"><span>事件日志</span><div><button class="btn btn-sm" onclick="clrLog()">清空</button></div></div>
+<div class="pb"><div class="elog" id="evtLog"><div class="e"><span class="t">[启动]</span><span class="m i">PVE UPS 管理器已启动</span></div></div></div></div>
 </div>
 
 <div class="tc" id="Tset">
@@ -210,16 +210,15 @@ NISPORT 3551</pre>
 <div class="pb">
 <p style="font-size:13px;color:var(--t2);margin-bottom:12px">模拟断电关机信号，测试 UPS 工具与 PVE 集成。</p>
 <button class="btn btn-d btn-sm" onclick="sendFSD()">发送 NUT FSD 信号</button>
-</div></div></div>
-
-<div class="modal-o" id="modal">
+</div></div>
+</div>modal-o" id="modal">
 <div class="modal">
-<h3>瀹夊叏鍏虫満</h3>
-<label>妯″紡</label>
-<select id="shutMode"><option value="vms_only">浠呭叧闂?VM/CT</option><option value="all">VM/CT + 瀹夸富鏈?/option></select>
-<label>寤惰繜 (绉掞紝鍏ㄩ儴鍏抽棴妯″紡)</label>
+<h3>安全关机</h3>
+<label>模式</label>
+<select id="shutMode"><option value="vms_only">仅关闭 VM/CT</option><option value="all">VM/CT + 宿主机</option></select>
+<label>延迟 (秒，全部关闭模式)</label>
 <input type="number" id="shutDelay" value="60" min="10">
-<div class="ma"><button class="btn" onclick="hideModal()">鍙栨秷</button><button class="btn btn-d" onclick="doShutdown()">鍏虫満</button></div>
+<div class="ma"><button class="btn" onclick="hideModal()">取消</button><button class="btn btn-d" onclick="doShutdown()">关机</button></div>
 </div></div>
 
 <div class="toast" id="toast"></div>
@@ -230,38 +229,38 @@ const B=window.location.origin;
 
 function toast(m,e){const t=document.getElementById("toast");t.textContent=m;t.style.borderColor=e?"var(--rd)":"var(--gr)";t.classList.add("sh");setTimeout(()=>t.classList.remove("sh"),3000)}
 function log(m,t){const l=document.getElementById("evtLog");const e=document.createElement("div");e.className="e";const n=new Date();e.innerHTML='<span class="t">['+n.toLocaleTimeString("zh-CN",{hour12:false})+']</span><span class="m '+(t||"i")+'">'+m+"</span>";l.appendChild(e);l.scrollTop=l.scrollHeight}
-function clrLog(){document.getElementById("evtLog").innerHTML="";log("鏃ュ織宸叉竻绌?,"i")}
+function clrLog(){document.getElementById("evtLog").innerHTML="";log("日志已清空","i")}
 function switchTab(n){document.querySelectorAll(".tab").forEach(t=>t.classList.remove("act"));document.querySelectorAll(".tc").forEach(t=>t.classList.remove("act"));document.querySelector('.tab[onclick*="'+n+'"]').classList.add("act");document.getElementById("T"+n).classList.add("act")}
 
-function pickNut(f,el){S.cur=f;document.querySelectorAll("#nutFiles .ctab").forEach(t=>t.classList.remove("act"));el.classList.add("act");document.getElementById("nutEd").value=S.cfgs[f]||"// 灏氭湭鍔犺浇 "+f}
-function loadNut(){log("鍔犺浇 NUT 閰嶇疆...","i");fetch(B+"/api/nut/config").then(r=>r.json()).then(d=>{if(d.success){S.cfgs=d.configs||{};const ed=document.getElementById("nutEd");ed.value=S.cfgs[S.cur]||"# "+S.cur+" 鏈壘鍒?;log("NUT 鍔犺浇瀹屾垚","ok");toast("宸插姞杞?)}}).catch(e=>{log("鍔犺浇澶辫触: "+e.message,"e");toast("鍔犺浇澶辫触",true)})}
-function saveNut(){const v=document.getElementById("nutEd").value;log("淇濆瓨 "+S.cur+"...","i");fetch(B+"/api/nut/config",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({filename:S.cur,content:v})}).then(r=>r.json()).then(d=>{if(d.success){S.cfgs[S.cur]=v;log(S.cur+" 宸蹭繚瀛?,"ok");toast("宸蹭繚瀛?)}else{log("淇濆瓨澶辫触: "+d.message,"e");toast("淇濆瓨澶辫触",true)}}).catch(e=>{log("淇濆瓨澶辫触: "+e.message,"e");toast("淇濆瓨鍑洪敊",true)})}
-function restartNut(){log("閲嶅惎 NUT...","w");fetch(B+"/api/nut/restart",{method:"POST"}).then(r=>r.json()).then(d=>{log(d.success?"NUT 宸查噸鍚?:"閲嶅惎澶辫触: "+d.message,d.success?"ok":"e");toast(d.success?"宸查噸鍚?:"閲嶅惎澶辫触",!d.success)}).catch(e=>toast("璇锋眰澶辫触",true))}
+function pickNut(f,el){S.cur=f;document.querySelectorAll("#nutFiles .ctab").forEach(t=>t.classList.remove("act"));el.classList.add("act");document.getElementById("nutEd").value=S.cfgs[f]||"// 尚未加载 "+f}
+function loadNut(){log("加载 NUT 配置...","i");fetch(B+"/api/nut/config").then(r=>r.json()).then(d=>{if(d.success){S.cfgs=d.configs||{};const ed=document.getElementById("nutEd");ed.value=S.cfgs[S.cur]||"# "+S.cur+" 未找到";log("NUT 加载完成","ok");toast("已加载")}}).catch(e=>{log("加载失败: "+e.message,"e");toast("加载失败",true)})}
+function saveNut(){const v=document.getElementById("nutEd").value;log("保存 "+S.cur+"...","i");fetch(B+"/api/nut/config",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({filename:S.cur,content:v})}).then(r=>r.json()).then(d=>{if(d.success){S.cfgs[S.cur]=v;log(S.cur+" 已保存","ok");toast("已保存")}else{log("保存失败: "+d.message,"e");toast("保存失败",true)}}).catch(e=>{log("保存失败: "+e.message,"e");toast("保存出错",true)})}
+function restartNut(){log("重启 NUT...","w");fetch(B+"/api/nut/restart",{method:"POST"}).then(r=>r.json()).then(d=>{log(d.success?"NUT 已重启":"重启失败: "+d.message,d.success?"ok":"e");toast(d.success?"已重启":"重启失败",!d.success)}).catch(e=>toast("请求失败",true))}
 
-function loadApc(){log("鍔犺浇 apcupsd...","i");fetch(B+"/api/apcupsd/config").then(r=>r.json()).then(d=>{if(d.success&&d.config){document.getElementById("apcEd").value=d.config;log("apcupsd 宸插姞杞?,"ok")}else{document.getElementById("apcEd").value="# apcupsd 鏈壘鍒?;log("apcupsd 鏈壘鍒?,"w")}}).catch(e=>toast("澶辫触: "+e.message,true))}
-function saveApc(){const v=document.getElementById("apcEd").value;log("淇濆瓨 apcupsd...","i");fetch(B+"/api/apcupsd/config",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({content:v})}).then(r=>r.json()).then(d=>{log(d.success?"宸蹭繚瀛?:"澶辫触: "+d.message,d.success?"ok":"e");toast(d.success?"宸蹭繚瀛?:"澶辫触",!d.success)}).catch(e=>toast("鍑洪敊",true))}
-function restartApc(){log("閲嶅惎 apcupsd...","w");fetch(B+"/api/apcupsd/restart",{method:"POST"}).then(r=>r.json()).then(d=>{log(d.success?"宸查噸鍚?:"澶辫触: "+d.message,d.success?"ok":"e");toast(d.success?"宸查噸鍚?:"澶辫触",!d.success)}).catch(e=>toast("璇锋眰澶辫触",true))}
+function loadApc(){log("加载 apcupsd...","i");fetch(B+"/api/apcupsd/config").then(r=>r.json()).then(d=>{if(d.success&&d.config){document.getElementById("apcEd").value=d.config;log("apcupsd 已加载","ok")}else{document.getElementById("apcEd").value="# apcupsd 未找到";log("apcupsd 未找到","w")}}).catch(e=>toast("失败: "+e.message,true))}
+function saveApc(){const v=document.getElementById("apcEd").value;log("保存 apcupsd...","i");fetch(B+"/api/apcupsd/config",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({content:v})}).then(r=>r.json()).then(d=>{log(d.success?"已保存":"失败: "+d.message,d.success?"ok":"e");toast(d.success?"已保存":"失败",!d.success)}).catch(e=>toast("出错",true))}
+function restartApc(){log("重启 apcupsd...","w");fetch(B+"/api/apcupsd/restart",{method:"POST"}).then(r=>r.json()).then(d=>{log(d.success?"已重启":"失败: "+d.message,d.success?"ok":"e");toast(d.success?"已重启":"失败",!d.success)}).catch(e=>toast("请求失败",true))}
 
-function loadVMs(){log("鑾峰彇 VM 鍒楄〃...","i");document.getElementById("vmList").innerHTML='<div class="emp"><span class="ldr"></span> 鍔犺浇涓?..</div>';fetch(B+"/api/pve/list").then(r=>r.json()).then(d=>{if(d.success){renderVMs(d.vms||[],d.containers||[]);log("VM: "+(d.vms||[]).length+" CT: "+(d.containers||[]).length,"ok")}else{document.getElementById("vmList").innerHTML='<div class="emp">'+d.message+'<br><button class="btn btn-sm" onclick="loadVMs()" style="margin-top:8px">閲嶈瘯</button></div>';log("鑾峰彇澶辫触: "+d.message,"e")}}).catch(e=>{document.getElementById("vmList").innerHTML='<div class="emp">杩炴帴澶辫触<br><small>'+e.message+"</small></div>";log("杩炴帴澶辫触","e")})}
-function renderVMs(vms,cts){let h='<table class="tbl"><tr><th>ID</th><th>鍚嶇О</th><th>绫诲瀷</th><th>鐘舵€?/th><th>鍐呭瓨</th></tr>';vms.forEach(v=>{const r=v.status==="running";h+="<tr><td>"+v.vmid+"</td><td>"+esc(v.name)+"</td><td>VM</td><td><span class='bdg "+(r?"ok":"no")+"'>"+(r?"鈼?杩愯涓?:"鈼?鍋滄")+"</span></td><td>"+esc(v.memory||"N/A")+"</td></tr>"});cts.forEach(c=>{const r=c.status==="running";h+="<tr><td>"+c.vmid+"</td><td>"+esc(c.name)+"</td><td>CT</td><td><span class='bdg "+(r?"ok":"no")+"'>"+(r?"鈼?杩愯涓?:"鈼?鍋滄")+"</span></td><td>"+esc(c.memory||"N/A")+"</td></tr>"});h+="</table>";document.getElementById("vmList").innerHTML=h}
+function loadVMs(){log("获取 VM 列表...","i");document.getElementById("vmList").innerHTML='<div class="emp"><span class="ldr"></span> 加载中...</div>';fetch(B+"/api/pve/list").then(r=>r.json()).then(d=>{if(d.success){renderVMs(d.vms||[],d.containers||[]);log("VM: "+(d.vms||[]).length+" CT: "+(d.containers||[]).length,"ok")}else{document.getElementById("vmList").innerHTML='<div class="emp">'+d.message+'<br><button class="btn btn-sm" onclick="loadVMs()" style="margin-top:8px">重试</button></div>';log("获取失败: "+d.message,"e")}}).catch(e=>{document.getElementById("vmList").innerHTML='<div class="emp">连接失败<br><small>'+e.message+"</small></div>";log("连接失败","e")})}
+function renderVMs(vms,cts){let h='<table class="tbl"><tr><th>ID</th><th>名称</th><th>类型</th><th>状态</th><th>内存</th></tr>';vms.forEach(v=>{const r=v.status==="running";h+="<tr><td>"+v.vmid+"</td><td>"+esc(v.name)+"</td><td>VM</td><td><span class='bdg "+(r?"ok":"no")+"'>"+(r?"● 运行中":"○ 停止")+"</span></td><td>"+esc(v.memory||"N/A")+"</td></tr>"});cts.forEach(c=>{const r=c.status==="running";h+="<tr><td>"+c.vmid+"</td><td>"+esc(c.name)+"</td><td>CT</td><td><span class='bdg "+(r?"ok":"no")+"'>"+(r?"● 运行中":"○ 停止")+"</span></td><td>"+esc(c.memory||"N/A")+"</td></tr>"});h+="</table>";document.getElementById("vmList").innerHTML=h}
 function esc(s){const d=document.createElement("div");d.textContent=s||"";return d.innerHTML}
 function showModal(){document.getElementById("modal").classList.add("sh")}
 function hideModal(){document.getElementById("modal").classList.remove("sh")}
-function doShutdown(){const m=document.getElementById("shutMode").value;const d=parseInt(document.getElementById("shutDelay").value)||60;hideModal();log("鎵ц鍏虫満 "+m+" 寤惰繜 "+d+"s...","w");toast("姝ｅ湪鍏虫満...");fetch(B+"/api/pve/shutdown",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mode:m,delay:d})}).then(r=>r.json()).then(d=>{log(d.success?"鍏虫満宸插惎鍔?:"澶辫触: "+d.message,d.success?"ok":"e");toast(d.success?"宸插彂閫?:"澶辫触",!d.success)}).catch(e=>toast("璇锋眰澶辫触",true))}
+function doShutdown(){const m=document.getElementById("shutMode").value;const d=parseInt(document.getElementById("shutDelay").value)||60;hideModal();log("执行关机 "+m+" 延迟 "+d+"s...","w");toast("正在关机...");fetch(B+"/api/pve/shutdown",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mode:m,delay:d})}).then(r=>r.json()).then(d=>{log(d.success?"关机已启动":"失败: "+d.message,d.success?"ok":"e");toast(d.success?"已发送":"失败",!d.success)}).catch(e=>toast("请求失败",true))}
 
-function loadSys(){fetch(B+"/api/system/info").then(r=>r.json()).then(d=>{if(d.success){const s=d.system;let h='<table class="tbl" style="font-size:13px">';h+="<tr><td style=width:120px>涓绘満鍚?/td><td><code>"+esc(s.hostname)+"</code></td></tr>";h+="<tr><td>骞冲彴</td><td>"+s.platform+" "+s.arch+"</td></tr>";h+="<tr><td>CPU</td><td>"+s.cpus+" 鏍稿績</td></tr>";h+="<tr><td>鍐呭瓨</td><td>"+fmtB(s.freeMem)+" / "+fmtB(s.totalMem)+"</td></tr>";h+="<tr><td>杩愯</td><td>"+fmtU(s.uptime)+"</td></tr></table>";document.getElementById("sysInfo").innerHTML=h}}).catch(()=>{document.getElementById("sysInfo").innerHTML='<div class="emp">鏈湴妯″紡</div>'})}
+function loadSys(){fetch(B+"/api/system/info").then(r=>r.json()).then(d=>{if(d.success){const s=d.system;let h='<table class="tbl" style="font-size:13px">';h+="<tr><td style=width:120px>主机名</td><td><code>"+esc(s.hostname)+"</code></td></tr>";h+="<tr><td>平台</td><td>"+s.platform+" "+s.arch+"</td></tr>";h+="<tr><td>CPU</td><td>"+s.cpus+" 核心</td></tr>";h+="<tr><td>内存</td><td>"+fmtB(s.freeMem)+" / "+fmtB(s.totalMem)+"</td></tr>";h+="<tr><td>运行</td><td>"+fmtU(s.uptime)+"</td></tr></table>";document.getElementById("sysInfo").innerHTML=h}}).catch(()=>{document.getElementById("sysInfo").innerHTML='<div class="emp">本地模式</div>'})}
 function fmtB(b){if(!b)return"0 B";const u=["B","KB","MB","GB","TB"];let i=0;let s=b;while(s>=1024&&i<4){s/=1024;i++}return s.toFixed(1)+" "+u[i]}
-function fmtU(s){const d=Math.floor(s/86400);const h=Math.floor((s%86400)/3600);const m=Math.floor((s%3600)/60);let r="";if(d)r+=d+"澶?";if(h)r+=h+"灏忔椂 ";r+=m+"鍒嗛挓";return r}
-function sendFSD(){if(!confirm("鍙戦€?NUT FSD 淇″彿锛熸ā鎷熸柇鐢靛叧鏈恒€?))return;log("鍙戦€?FSD...","w");toast("鍙戦€?FSD...");fetch(B+"/api/pve/test-nut-shutdown",{method:"POST"}).then(r=>r.json()).then(d=>{log("FSD: "+(d.message||"宸插彂閫?),"ok");toast("FSD 宸插彂閫?)}).catch(e=>toast("澶辫触",true))}
-function refreshAll(){log("鍒锋柊鎵€鏈?..","i");loadNut();loadApc();loadVMs()}
+function fmtU(s){const d=Math.floor(s/86400);const h=Math.floor((s%86400)/3600);const m=Math.floor((s%3600)/60);let r="";if(d)r+=d+"天 ";if(h)r+=h+"小时 ";r+=m+"分钟";return r}
+function sendFSD(){if(!confirm("发送 NUT FSD 信号？模拟断电关机。"))return;log("发送 FSD...","w");toast("发送 FSD...");fetch(B+"/api/pve/test-nut-shutdown",{method:"POST"}).then(r=>r.json()).then(d=>{log("FSD: "+(d.message||"已发送"),"ok");toast("FSD 已发送")}).catch(e=>toast("失败",true))}
+function refreshAll(){log("刷新所有...","i");loadNut();loadApc();loadVMs()}
 
-function checkTools(){fetch(B+"/api/system/tools").then(r=>r.json()).then(d=>{const st=document.getElementById("connSt");const tl=document.getElementById("activeTool");if(d.success){st.className="bdg ok";st.innerHTML="鈼?宸茶繛鎺?;if(d.hasNUT&&d.hasAPC){tl.textContent="NUT + apcupsd";tl.style.color="var(--gr)"}else if(d.hasNUT){tl.textContent="NUT";tl.style.color="var(--bl)"}else if(d.hasAPC){tl.textContent="apcupsd";tl.style.color="var(--yl)"}else{tl.textContent="鏈娴嬪埌";tl.style.color="var(--tm)"}}}).catch(()=>{document.getElementById("connSt").className="bdg no";document.getElementById("connSt").innerHTML="鉁?鏈繛鎺?})}
-function checkUps(){fetch(B+"/api/nut/status").then(r=>r.json()).then(d=>{if(d.success&&d.status==="connected"&&d.data){const x=d.data;document.getElementById("upsStatus").textContent="鈼?鍦ㄧ嚎";document.getElementById("upsStatus").className="vl gr";document.getElementById("upsModel").textContent=x["ups.model"]||x["device.model"]||"UPS";document.getElementById("upsBattery").textContent=x["battery.charge"]||"--%";document.getElementById("upsInputVoltage").textContent=x["input.voltage"]||"-- V";document.getElementById("upsLoad").textContent=x["ups.load"]||"--%";const ld=parseInt(x["ups.load"]);document.getElementById("upsLoad").style.color="var(--"+(ld>80?"rd":ld>50?"yl":"gr")+")"}else{fetch(B+"/api/apcupsd/status").then(r=>r.json()).then(d2=>{if(d2.success&&d2.data){const x=d2.data;document.getElementById("upsStatus").textContent="鈼?鍦ㄧ嚎";document.getElementById("upsStatus").className="vl gr";document.getElementById("upsModel").textContent=x["MODEL"]||"APC";document.getElementById("upsBattery").textContent=(x["BCHARGE"]||"").trim()||"--%";document.getElementById("upsInputVoltage").textContent=(x["LINEV"]||"").trim()||"-- V";document.getElementById("upsLoad").textContent=(x["LOADPCT"]||"").trim()||"--%"}}).catch(()=>{})}}).catch(()=>{})}
+function checkTools(){fetch(B+"/api/system/tools").then(r=>r.json()).then(d=>{const st=document.getElementById("connSt");const tl=document.getElementById("activeTool");if(d.success){st.className="bdg ok";st.innerHTML="● 已连接";if(d.hasNUT&&d.hasAPC){tl.textContent="NUT + apcupsd";tl.style.color="var(--gr)"}else if(d.hasNUT){tl.textContent="NUT";tl.style.color="var(--bl)"}else if(d.hasAPC){tl.textContent="apcupsd";tl.style.color="var(--yl)"}else{tl.textContent="未检测到";tl.style.color="var(--tm)"}}}).catch(()=>{document.getElementById("connSt").className="bdg no";document.getElementById("connSt").innerHTML="✕ 未连接"})}
+function checkUps(){fetch(B+"/api/nut/status").then(r=>r.json()).then(d=>{if(d.success&&d.status==="connected"&&d.data){const x=d.data;document.getElementById("upsStatus").textContent="● 在线";document.getElementById("upsStatus").className="vl gr";document.getElementById("upsModel").textContent=x["ups.model"]||x["device.model"]||"UPS";document.getElementById("upsBattery").textContent=x["battery.charge"]||"--%";document.getElementById("upsInputVoltage").textContent=x["input.voltage"]||"-- V";document.getElementById("upsLoad").textContent=x["ups.load"]||"--%";const ld=parseInt(x["ups.load"]);document.getElementById("upsLoad").style.color="var(--"+(ld>80?"rd":ld>50?"yl":"gr")+")"}else{fetch(B+"/api/apcupsd/status").then(r=>r.json()).then(d2=>{if(d2.success&&d2.data){const x=d2.data;document.getElementById("upsStatus").textContent="● 在线";document.getElementById("upsStatus").className="vl gr";document.getElementById("upsModel").textContent=x["MODEL"]||"APC";document.getElementById("upsBattery").textContent=(x["BCHARGE"]||"").trim()||"--%";document.getElementById("upsInputVoltage").textContent=(x["LINEV"]||"").trim()||"-- V";document.getElementById("upsLoad").textContent=(x["LOADPCT"]||"").trim()||"--%"}}).catch(()=>{})}}).catch(()=>{})}
 
-document.addEventListener("DOMContentLoaded",function(){checkTools();checkUps();loadSys();log("浠〃鏉垮氨缁?,"ok")});
+document.addEventListener("DOMContentLoaded",function(){checkTools();checkUps();loadSys();log("仪表板就绪","ok")});
 
-function loadNutSettings(){fetch(B+'/api/nut/settings').then(r=>r.json()).then(d=>{if(d.success){document.getElementById('nutHostInput').value=d.nutHost||'localhost';document.getElementById('nutUpsInput').value=d.nutUps||'ups';document.getElementById('nutSettingsStatus').textContent='✓ 已加载';}else{document.getElementById('nutSettingsStatus').textContent='✗ 加载失败';}}).catch(()=>{document.getElementById('nutSettingsStatus').textContent='✗ 连接失败';})}
-function saveNutSettings(){const h=document.getElementById('nutHostInput').value.trim()||'localhost';const u=document.getElementById('nutUpsInput').value.trim()||'ups';document.getElementById('nutSettingsStatus').textContent='保存中...';fetch(B+'/api/nut/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nutHost:h,nutUps:u})}).then(r=>r.json()).then(d=>{if(d.success){document.getElementById('nutSettingsStatus').textContent='✓ 已保存，重启服务生效';toast('NUT 连接设置已保存');}else{document.getElementById('nutSettingsStatus').textContent='✗ 保存失败: '+(d.message||'');}}).catch(()=>{document.getElementById('nutSettingsStatus').textContent='✗ 保存失败';})}
+function loadNutSettings(){fetch(B+'/api/nut/settings').then(r=>r.json()).then(d=>{if(d.success){document.getElementById("nutHostInput").value=d.nutHost||"localhost";document.getElementById("nutUpsInput").value=d.nutUps||"ups";document.getElementById("nutSettingsStatus").textContent="✓ 已加载";}else{document.getElementById("nutSettingsStatus").textContent="✗ 加载失败";}}).catch(()=>{document.getElementById("nutSettingsStatus").textContent="✗ 连接失败";})}
+function saveNutSettings(){const h=document.getElementById("nutHostInput").value.trim()||"localhost";const u=document.getElementById("nutUpsInput").value.trim()||"ups";document.getElementById("nutSettingsStatus").textContent="保存中...";fetch(B+"/api/nut/settings",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({nutHost:h,nutUps:u})}).then(r=>r.json()).then(d=>{if(d.success){document.getElementById("nutSettingsStatus").textContent="✓ 已保存，重启服务生效";toast("NUT 连接设置已保存");}else{document.getElementById("nutSettingsStatus").textContent="✗ 保存失败: "+(d.message||"");}}).catch(()=>{document.getElementById("nutSettingsStatus").textContent="✗ 保存失败";})}
 </script>
 </body>
 </html>
