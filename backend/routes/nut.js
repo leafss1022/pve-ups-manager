@@ -159,4 +159,112 @@ router.post('/restart', (req, res) => {
   }
 });
 
+
+
+// POST: Save ups.conf from form fields
+router.post("/ups-conf-form", (req, res) => {
+  const { name, driver, port, desc } = req.body;
+  if (!name || !driver) {
+    return res.status(400).json({ success: false, message: "Missing required fields: name, driver" });
+  }
+  let conf = "[" + name + "]\n    driver = " + driver + "\n    port = " + (port || "auto");
+  if (desc) conf += "\n    desc = \"" + desc + "\"";
+  conf += "\n";
+  try {
+    fs2.writeFileSync(UPS_CONF, conf, "utf8");
+    res.json({ success: true, message: "ups.conf saved" });
+  } catch (e) {
+    res.status(500).json({ success: false, message: e.message });
+  }
+});
+
+// GET: Parse ups.conf to form fields
+router.get("/ups-conf-form", (req, res) => {
+  try {
+    let name = "ups", driver = "usbhid-ups", port = "auto", desc = "";
+    if (fs2.existsSync(UPS_CONF)) {
+      const content = fs2.readFileSync(UPS_CONF, "utf8");
+      const nm = content.match(/^\[([^\]]+)\]/m);
+      if (nm) name = nm[1].trim();
+      const dr = content.match(/driver\s*=\s*(.+)/);
+      if (dr) driver = dr[1].trim();
+      const pt = content.match(/port\s*=\s*(.+)/);
+      if (pt) port = pt[1].trim();
+      const dc = content.match(/desc\s*=\s*\"?([^\"]+)\"?/);
+      if (dc) desc = dc[1].trim();
+    }
+    res.json({ success: true, name, driver, port, desc });
+  } catch (e) {
+    res.json({ success: true, name: "ups", driver: "usbhid-ups", port: "auto", desc: "" });
+  }
+});
+
+// POST: Save upsmon.conf from form fields
+router.post("/upsmon-conf-form", (req, res) => {
+  const { monitor, user, pass, role, warnat, pollfreq } = req.body;
+  let conf = "MONITOR " + (monitor || "ups@localhost") + " 1 " + (user || "monuser") + " " + (pass || "secret") + " " + (role || "master") + "\n";
+  conf += "SHUTDOWNCMD \"/sbin/shutdown -h +0\"\n";
+  conf += "POLLFREQ " + (pollfreq || "5") + "\n";
+  conf += "POLLFREQALERT 3\n";
+  conf += "HOSTSYNC 15\n";
+  conf += "WARNAT " + (warnat || "30") + "\n";
+  conf += "DEADTIME 15\n";
+  conf += "POWERDOWNFLAG /etc/killpower\n";
+  try {
+    fs2.writeFileSync(UPSCONF_CONF, conf, "utf8");
+    res.json({ success: true, message: "upsmon.conf saved" });
+  } catch (e) {
+    res.status(500).json({ success: false, message: e.message });
+  }
+});
+
+// GET: Parse upsmon.conf to form fields
+router.get("/upsmon-conf-form", (req, res) => {
+  try {
+    let monitor = "ups@localhost", user = "monuser", pass = "secret", role = "master", warnat = "30", pollfreq = "5";
+    if (fs2.existsSync(UPSCONF_CONF)) {
+      const content = fs2.readFileSync(UPSCONF_CONF, "utf8");
+      const mm = content.match(/MONITOR\s+(\S+)\s+\d+\s+(\S+)\s+(\S+)\s+(\S+)/);
+      if (mm) { monitor = mm[1]; user = mm[2]; pass = mm[3]; role = mm[4]; }
+      const wm = content.match(/WARNAT\s+(\d+)/);
+      if (wm) warnat = wm[1];
+      const pm = content.match(/POLLFREQ\s+(\d+)/);
+      if (pm) pollfreq = pm[1];
+    }
+    res.json({ success: true, monitor, user, pass, role, warnat, pollfreq });
+  } catch (e) {
+    res.json({ success: true, monitor: "ups@localhost", user: "monuser", pass: "secret", role: "master", warnat: "30", pollfreq: "5" });
+  }
+});
+
+// POST: Save upsd.users from form fields
+router.post("/upsd-users-form", (req, res) => {
+  const { user, pass, role } = req.body;
+  const content = "[" + (user || "monuser") + "]\n    password = " + (pass || "secret") + "\n    upsmon " + (role || "master") + "\n";
+  try {
+    fs2.writeFileSync(UPSD_USERS, content, "utf8");
+    res.json({ success: true, message: "upsd.users saved" });
+  } catch (e) {
+    res.status(500).json({ success: false, message: e.message });
+  }
+});
+
+// GET: Parse upsd.users to form fields
+router.get("/upsd-users-form", (req, res) => {
+  try {
+    let user = "monuser", pass = "secret", role = "master";
+    if (fs2.existsSync(UPSD_USERS)) {
+      const content = fs2.readFileSync(UPSD_USERS, "utf8");
+      const um = content.match(/^\[([^\]]+)\]/m);
+      if (um) user = um[1].trim();
+      const pm = content.match(/password\s*=\s*(.+)/);
+      if (pm) pass = pm[1].trim();
+      const rm = content.match(/upsmon\s+(\S+)/);
+      if (rm) role = rm[1].trim();
+    }
+    res.json({ success: true, user, pass, role });
+  } catch (e) {
+    res.json({ success: true, user: "monuser", pass: "secret", role: "master" });
+  }
+});
 module.exports = router;
