@@ -19,17 +19,44 @@ app.use('/api/nut', require('./routes/nut'));
 app.use('/api/apcupsd', require('./routes/apcupsd'));
 app.use('/api/pve', require('./routes/pve'));
 app.use('/api/system', require('./routes/system'));
+app.use('/api/diagnose', require('./routes/diagnose'));
 
 // Serve frontend
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'frontend', 'public', 'index.html'));
 });
 
-// WebSocket for real-time UPS monitoring
-io.on('connection', (socket) => {
+// WebSocket
+var statusInterval = null;
+io.on('connection', function(socket) {
     console.log('Client connected:', socket.id);
-
-    socket.on('disconnect', () => {
+    var sendStatus = function() {
+        var exec = require('child_process').exec;
+        exec('upsc ups@localhost 2>&1', function(err, stdout) {
+            var np = {};
+            if (!err && stdout && !stdout.includes('Error')) {
+                stdout.split('\n').forEach(function(li) {
+                    var idx = li.indexOf(':');
+                    if (idx > 0) np[li.slice(0, idx).trim()] = li.slice(idx + 1).trim();
+                });
+            }
+            socket.emit('nutStatus', { connected: Object.keys(np).length > 0, data: np });
+        });
+        exec('apcaccess 2>&1', function(err2, stdout2) {
+            var ap = {};
+            if (!err2 && stdout2 && !stdout2.includes('Error')) {
+                stdout2.split('\n').forEach(function(li) {
+                    var idx = li.indexOf(':');
+                    if (idx > 0) ap[li.slice(0, idx).trim()] = li.slice(idx + 1).trim();
+                });
+            }
+            socket.emit('apcStatus', { connected: Object.keys(ap).length > 0, data: ap });
+        });
+    };
+    sendStatus();
+    statusInterval = setInterval(sendStatus, 5000);
+    socket.on('disconnect', function() {
+        if (statusInterval) clearInterval(statusInterval);
         console.log('Client disconnected:', socket.id);
     });
 });

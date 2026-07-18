@@ -57,7 +57,7 @@ router.post('/validate', (req, res) => {
 router.get('/status', (req, res) => {
     exec('upsc ups@localhost 2>&1 || echo "NUT not running or no UPS configured"', (err, stdout, stderr) => {
         if (err && stdout.includes('not running')) {
-            return res.json({ success: false, status: 'disconnected', message: stdout.trim() });
+            return res.json({ success: false, status: 'disconnected', message: stdout.trim(), diagnose: 'NUT not connected. Check: 1) is NUT installed? 2) is ups.conf configured? 3) are services running? 4) is USB UPS plugged in?' });
         }
         const lines = stdout.split('\n').filter(l => l.trim());
         const parsed = {};
