@@ -1,12 +1,12 @@
 #!/bin/bash
-# PVE UPS Manager - Uninstall Script v0.4.2
+# PVE UPS Manager - Uninstall Script v0.4.3
 # One-click removal of PVE UPS Manager and optional UPS tools
 
 set -eo pipefail
 
 INSTALL_DIR="/opt/pve-ups-manager"
 
-echo "=== PVE UPS Manager 卸载 (v0.4.2) ==="
+echo "=== PVE UPS Manager 卸载 (v0.4.3) ==="
 echo ""
 
 # Confirm
