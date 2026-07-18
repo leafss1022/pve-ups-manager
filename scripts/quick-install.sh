@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+#!/bin/bash
 # PVE UPS Manager - Quick install script v0.2.0
 # Fixes: self-reexec from curl pipe, robust Node.js install, service health check
 
