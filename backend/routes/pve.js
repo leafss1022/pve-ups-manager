@@ -15,45 +15,27 @@ router.get("/list", (req, res) => {
     });
 });
 
-// qm list output format:
-//   VMID NAME       STATUS    MEM(MB)  BOOTDISK(GB)  PID
-//   100  test-vm    running   2048     32.00         12345
-// VMID=0, NAME=1, STATUS=2, MEM=3
 function parseQmList(output) {
     const lines = output.split("\n").filter(l => l.trim());
     if (lines.length < 2) return [];
     const result = [];
     for (let i = 1; i < lines.length; i++) {
         const parts = lines[i].trim().split(/\s+/);
-        if (parts.length >= 3) {
-            result.push({
-                vmid: parts[0],
-                name: parts[1],
-                status: parts[2],
-                memory: parts[3] || "N/A"
-            });
+        if (parts.length >= 4) {
+            result.push({ vmid: parts[0], name: parts[1], status: parts[2], memory: parts[3] });
         }
     }
     return result;
 }
 
-// pct list output format:
-//   VMID STATUS
-//   200  running
-// VMID=0, STATUS=1
 function parsePctList(output) {
     const lines = output.split("\n").filter(l => l.trim());
     if (lines.length < 2) return [];
     const result = [];
     for (let i = 1; i < lines.length; i++) {
         const parts = lines[i].trim().split(/\s+/);
-        if (parts.length >= 2) {
-            result.push({
-                vmid: parts[0],
-                name: parts[0],
-                status: parts[1],
-                memory: "N/A"
-            });
+        if (parts.length >= 4) {
+            result.push({ vmid: parts[0], name: parts[1], status: parts[2], memory: parts.length > 3 ? parts[3] : "N/A" });
         }
     }
     return result;
@@ -64,8 +46,8 @@ router.post("/shutdown", (req, res) => {
     const shutdownDelay = delay || 60;
     const cmds = [];
     if (mode === "vms_only" || mode === "all") {
-        cmds.push("for vmid in $(qm list | awk '{if(NR>1) print $1}'); do qm shutdown $vmid --timeout 30; done");
-        cmds.push("for vmid in $(pct list | awk '{if(NR>1) print $1}'); do pct shutdown $vmid --timeout 30; done");
+        cmds.push("for vmid in $(qm list | awk '{if(NR>1) print \$1}'); do qm shutdown $vmid --timeout 30; done");
+        cmds.push("for vmid in $(pct list | awk '{if(NR>1) print \$1}'); do pct shutdown $vmid --timeout 30; done");
     }
     if (mode === "all") {
         cmds.push("sleep " + shutdownDelay);
