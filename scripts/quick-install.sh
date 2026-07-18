@@ -6,17 +6,24 @@ set -e
 echo "=== PVE UPS Manager 一键部署 ==="
 echo ""
 
-# Install Node.js 20.x via NodeSource
-if ! command -v node &> /dev/null || [ "$(node -v | cut -d'.' -f1 | tr -d 'v')" -lt 18 ]; then
-    echo "正在安装 Node.js 20.x..."
-    curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-    apt-get install -y nodejs
+# Check if Node.js >= 18 exists
+HAVE_NODE=false
+if command -v node &> /dev/null; then
+    NODE_MAJOR=$(node -v 2>/dev/null | cut -d'.' -f1 | tr -d 'v')
+    if [ "$NODE_MAJOR" -ge 18 ] 2>/dev/null; then
+        HAVE_NODE=true
+    fi
 fi
 
-# Ensure npm is installed
-if ! command -v npm &> /dev/null; then
-    echo "正在安装 npm..."
-    apt-get install -y npm
+if [ "$HAVE_NODE" = false ]; then
+    echo "正在安装 Node.js 20.x (NodeSource)..."
+    apt-get update -qq
+    apt-get install -y ca-certificates curl gnupg
+    mkdir -p /etc/apt/keyrings
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+    apt-get update -qq
+    apt-get install -y nodejs
 fi
 
 echo "Node.js: $(node -v)"
@@ -62,7 +69,8 @@ sleep 2
 
 echo ""
 echo "=== 部署完成！ ==="
-echo "访问地址: http://$(hostname -I | awk '{print $1}'):3456"
+HOST_IP=$(hostname -I | awk "{print $1}")
+echo "访问地址: http://$HOST_IP:3456"
 echo "管理命令: systemctl status pve-ups-manager"
 echo "日志查看: journalctl -u pve-ups-manager -f"
 echo ""
