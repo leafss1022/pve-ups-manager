@@ -90,7 +90,7 @@ router.get('/status', (req, res) => {
     // upsc outputs data to stdout on success, error to both stdout and stderr on failure
     const combined = (stdout || '') + (stderr || '');
     // Check if we got real UPS data (not an error message)
-    const hasRealData = combined.length > 50 && 
+    const hasRealData = combined.length > 5 && 
       !combined.includes('Error') && 
       !combined.includes('failure') && 
       !combined.includes('not connected') &&
