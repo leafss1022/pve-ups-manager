@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const router = express.Router();
 const { exec } = require('child_process');
 const fs2 = require('fs');
