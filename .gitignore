@@ -3,8 +3,3 @@ node_modules/
 *.log
 .DS_Store
 _backups/
-
-fix_all.js
-fix*.js
-*.zip
-node_modules/
