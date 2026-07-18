@@ -188,16 +188,29 @@ NISPORT 3551</pre>
 </div>
 
 <div class="tc" id="Tset">
-<div class="pnl"><div class="pt"><span>绯荤粺淇℃伅</span></div>
-<div class="pb" id="sysInfo"><div class="emp">鍔犺浇涓?..</div></div></div>
-<div class="pnl"><div class="pt"><span>娴嬭瘯宸ュ叿</span></div>
+<div class="pnl"><div class="pt"><span>NUT 连接设置</span><button class="btn btn-p btn-sm" onclick="loadNutSettings()">加载</button><button class="btn btn-s btn-sm" onclick="saveNutSettings()">保存</button></div>
 <div class="pb">
-<p style="font-size:13px;color:var(--t2);margin-bottom:12px">妯℃嫙鏂數鍏虫満淇″彿锛屾祴璇?UPS 宸ュ叿涓?PVE 闆嗘垚銆?/p>
-<button class="btn btn-d btn-sm" onclick="sendFSD()">鍙戦€?NUT FSD 淇″彿</button>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div style="background:var(--bg2);padding:12px;border-radius:var(--r)">
+<label style="font-size:13px;color:var(--t2);display:block;margin-bottom:6px">NUT 服务器地址 (NUT_HOST)</label>
+<input type="text" id="nutHostInput" value="localhost" style="width:100%;padding:8px 12px;border-radius:4px;border:1px solid var(--bd);background:var(--bg);color:var(--tc);font-size:13px">
+<div style="font-size:11px;color:var(--tm);margin-top:4px">UPS 所在设备的 IP 地址，如 192.168.10.7</div>
+</div>
+<div style="background:var(--bg2);padding:12px;border-radius:var(--r)">
+<label style="font-size:13px;color:var(--t2);display:block;margin-bottom:6px">UPS 名称 (NUT_UPS)</label>
+<input type="text" id="nutUpsInput" value="ups" style="width:100%;padding:8px 12px;border-radius:4px;border:1px solid var(--bd);background:var(--bg);color:var(--tc);font-size:13px">
+<div style="font-size:11px;color:var(--tm);margin-top:4px">ups.conf 中配置的设备名称，默认 ups</div>
+</div>
+</div>
+<p id="nutSettingsStatus" style="font-size:12px;color:var(--tm);margin-top:8px"></p>
 </div></div>
-</div>
-
-</div>
+<div class="pnl"><div class="pt"><span>系统信息</span></div>
+<div class="pb" id="sysInfo"><div class="emp">加载中...</div></div></div>
+<div class="pnl"><div class="pt"><span>测试工具</span></div>
+<div class="pb">
+<p style="font-size:13px;color:var(--t2);margin-bottom:12px">模拟断电关机信号，测试 UPS 工具与 PVE 集成。</p>
+<button class="btn btn-d btn-sm" onclick="sendFSD()">发送 NUT FSD 信号</button>
+</div></div></div>
 
 <div class="modal-o" id="modal">
 <div class="modal">
@@ -246,6 +259,9 @@ function checkTools(){fetch(B+"/api/system/tools").then(r=>r.json()).then(d=>{co
 function checkUps(){fetch(B+"/api/nut/status").then(r=>r.json()).then(d=>{if(d.success&&d.status==="connected"&&d.data){const x=d.data;document.getElementById("upsStatus").textContent="鈼?鍦ㄧ嚎";document.getElementById("upsStatus").className="vl gr";document.getElementById("upsModel").textContent=x["ups.model"]||x["device.model"]||"UPS";document.getElementById("upsBattery").textContent=x["battery.charge"]||"--%";document.getElementById("upsInputVoltage").textContent=x["input.voltage"]||"-- V";document.getElementById("upsLoad").textContent=x["ups.load"]||"--%";const ld=parseInt(x["ups.load"]);document.getElementById("upsLoad").style.color="var(--"+(ld>80?"rd":ld>50?"yl":"gr")+")"}else{fetch(B+"/api/apcupsd/status").then(r=>r.json()).then(d2=>{if(d2.success&&d2.data){const x=d2.data;document.getElementById("upsStatus").textContent="鈼?鍦ㄧ嚎";document.getElementById("upsStatus").className="vl gr";document.getElementById("upsModel").textContent=x["MODEL"]||"APC";document.getElementById("upsBattery").textContent=(x["BCHARGE"]||"").trim()||"--%";document.getElementById("upsInputVoltage").textContent=(x["LINEV"]||"").trim()||"-- V";document.getElementById("upsLoad").textContent=(x["LOADPCT"]||"").trim()||"--%"}}).catch(()=>{})}}).catch(()=>{})}
 
 document.addEventListener("DOMContentLoaded",function(){checkTools();checkUps();loadSys();log("浠〃鏉垮氨缁?,"ok")});
+
+function loadNutSettings(){fetch(B+'/api/nut/settings').then(r=>r.json()).then(d=>{if(d.success){document.getElementById('nutHostInput').value=d.nutHost||'localhost';document.getElementById('nutUpsInput').value=d.nutUps||'ups';document.getElementById('nutSettingsStatus').textContent='✓ 已加载';}else{document.getElementById('nutSettingsStatus').textContent='✗ 加载失败';}}).catch(()=>{document.getElementById('nutSettingsStatus').textContent='✗ 连接失败';})}
+function saveNutSettings(){const h=document.getElementById('nutHostInput').value.trim()||'localhost';const u=document.getElementById('nutUpsInput').value.trim()||'ups';document.getElementById('nutSettingsStatus').textContent='保存中...';fetch(B+'/api/nut/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nutHost:h,nutUps:u})}).then(r=>r.json()).then(d=>{if(d.success){document.getElementById('nutSettingsStatus').textContent='✓ 已保存，重启服务生效';toast('NUT 连接设置已保存');}else{document.getElementById('nutSettingsStatus').textContent='✗ 保存失败: '+(d.message||'');}}).catch(()=>{document.getElementById('nutSettingsStatus').textContent='✗ 保存失败';})}
 </script>
 </body>
 </html>
