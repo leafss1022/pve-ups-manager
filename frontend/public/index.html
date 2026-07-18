@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PVE UPS Manager</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg2:#1e293b;--bgh:#334155;--tc:#f1f5f9;--t2:#94a3b8;--tm:#64748b;--gr:#22c55e;--yl:#eab308;--rd:#ef4444;--bl:#3b82f6;--bd:#334155;--r:8px}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans SC",sans-serif;background:var(--bg);color:var(--tc);min-height:100vh}
+.c{max-width:1400px;margin:0 auto;padding:16px}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 0;margin-bottom:20px;border-bottom:1px solid var(--bd)}
+.hdr h1{font-size:20px;font-weight:600;display:flex;align-items:center;gap:10px}
+.hdr h1 span{background:var(--bl);font-size:12px;padding:2px 8px;border-radius:999px;color:#fff}
+.hdr-act{display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r);border:1px solid var(--bd);background:var(--bg2);color:var(--tc);cursor:pointer;font-size:13px;font-weight:500;transition:all .15s}
+.btn:hover{background:var(--bgh)}
+.btn-p{background:var(--bl);border-color:var(--bl);color:#fff}
+.btn-d{background:var(--rd);border-color:var(--rd);color:#fff}
+.btn-s{background:var(--gr);border-color:var(--gr);color:#000}
+.btn-sm{padding:4px 10px;font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+.card{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:16px}
+.card .lb{font-size:12px;color:var(--t2);margin-bottom:4px}
+.card .vl{font-size:24px;font-weight:700}
+.card .sb{font-size:12px;color:var(--tm);margin-top:4px}
+.card .vl.gr{color:var(--gr)}
+.card .vl.yl{color:var(--yl)}
+.card .vl.rd{color:var(--rd)}
+.card .vl.bl{color:var(--bl)}
+.tabs{display:flex;border-bottom:1px solid var(--bd)}
+.tab{padding:10px 20px;cursor:pointer;font-size:13px;font-weight:500;color:var(--t2);border-bottom:2px solid transparent;transition:all .15s}
+.tab:hover{color:var(--tc)}
+.tab.act{color:var(--bl);border-bottom-color:var(--bl)}
+.tc{display:none;padding:20px 0}
+.tc.act{display:block}
+.pnl{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:16px}
+.pt{padding:12px 16px;font-size:14px;font-weight:600;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
+.pb{padding:16px}
+.cfg{width:100%;min-height:200px;background:#0b1120;color:#e2e8f0;border:1px solid var(--bd);border-radius:var(--r);padding:12px;font-family:"Cascadia Code","Fira Code",Consolas,monospace;font-size:13px;line-height:1.6;resize:vertical;tab-size:4}
+.cfg:focus{outline:0;border-color:var(--bl)}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--bd);font-size:13px}
+.tbl th{color:var(--t2);font-weight:500}
+.tbl tr:hover td{background:rgba(59,130,246,.05)}
+.bdg{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:500}
+.bdg.ok{background:rgba(34,197,94,.15);color:var(--gr)}
+.bdg.no{background:rgba(100,116,139,.15);color:var(--tm)}
+.csel{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
+.ctab{padding:6px 14px;border-radius:999px;background:var(--bg2);border:1px solid var(--bd);color:var(--t2);cursor:pointer;font-size:12px;transition:all .15s}
+.ctab:hover{background:var(--bgh);color:var(--tc)}
+.ctab.act{background:var(--bl);border-color:var(--bl);color:#fff}
+.elog{max-height:300px;overflow-y:auto;font-family:"Cascadia Code",Consolas,monospace;font-size:12px;line-height:1.8}
+.elog .e{padding:2px 8px;border-bottom:1px solid rgba(51,65,85,.3);display:flex;gap:8px}
+.elog .t{color:var(--tm);flex-shrink:0}
+.elog .m{color:var(--tc)}
+.elog .m.i{color:var(--bl)}
+.elog .m.w{color:var(--yl)}
+.elog .m.e{color:var(--rd)}
+.elog .m.ok{color:var(--gr)}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:12px 20px;font-size:13px;color:var(--tc);box-shadow:0 4px 6px -1px rgba(0,0,0,.3);transform:translateY(120%);opacity:0;transition:all .3s;z-index:999}
+.toast.sh{transform:translateY(0);opacity:1}
+.emp{text-align:center;padding:40px 20px;color:var(--tm);font-size:14px}
+.modal-o{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:100;display:none;align-items:center;justify-content:center}
+.modal-o.sh{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:24px;max-width:500px;width:90%}
+.modal h3{margin-bottom:16px}
+.modal label{display:block;font-size:13px;color:var(--t2);margin-bottom:4px}
+.modal select,.modal input[type=number]{width:100%;padding:8px 12px;margin-bottom:12px;background:var(--bg);border:1px solid var(--bd);border-radius:4px;color:var(--tc);font-size:13px}
+.ma{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+@media(max-width:768px){.grid{grid-template-columns:repeat(2,1fr)}.c{padding:8px}.hdr h1{font-size:16px}}
+@media(max-width:480px){.grid{grid-template-columns:1fr}.csel{flex-direction:column}.ctab{text-align:center}}
+</style>
+</head>
+<body>
+<div class="c">
+
+<div class="hdr">
+<h1><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="10" y1="8" x2="10" y2="16"/><line x1="14" y1="10" x2="14" y2="14"/></svg> PVE UPS 管理器 <span>v1.0</span></h1>
+<div class="hdr-act">
+<button class="btn btn-sm" onclick="refreshAll()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> 刷新</button>
+<span id="connSt" class="bdg" style="font-size:11px">检查连接...</span>
+</div></div>
+
+<div class="grid" id="stats">
+<div class="card"><div class="lb">UPS 状态</div><div class="vl yl" id="upsStatus">检查中...</div><div class="sb" id="upsModel"></div></div>
+<div class="card"><div class="lb">电池电量</div><div class="vl gr" id="upsBattery">--%</div><div class="sb" id="upsBatteryVoltage"></div></div>
+<div class="card"><div class="lb">输入电压</div><div class="vl bl" id="upsInputVoltage">-- V</div><div class="sb" id="upsOutputVoltage"></div></div>
+<div class="card"><div class="lb">负载</div><div class="vl" id="upsLoad">--%</div><div class="sb" id="upsRuntime"></div></div>
+<div class="card"><div class="lb">运行时间</div><div class="vl" id="systemUptime">--</div><div class="sb">PVE 主机</div></div>
+<div class="card"><div class="lb">当前工具</div><div class="vl" id="activeTool" style="font-size:16px">检测中...</div><div class="sb">NUT / apcupsd</div></div>
+</div>
+
+<div class="tabs">
+<div class="tab act" onclick="switchTab('nut')">NUT 配置</div>
+<div class="tab" onclick="switchTab('apc')">apcupsd 配置</div>
+<div class="tab" onclick="switchTab('vms')">虚拟机管理</div>
+<div class="tab" onclick="switchTab('log')">事件日志</div>
+<div class="tab" onclick="switchTab('set')">设置</div>
+</div>
+
+<div class="tc act" id="Tnut">
+<div class="pnl"><div class="pt"><span>NUT 配置文件</span>
+<div><button class="btn btn-sm btn-p" onclick="loadNut()">加载</button><button class="btn btn-sm btn-s" onclick="saveNut()">保存</button><button class="btn btn-sm" onclick="restartNut()">重启</button></div>
+</div><div class="pb">
+<div class="csel" id="nutFiles">
+<span class="ctab act" onclick="pickNut('ups.conf',this)">ups.conf</span>
+<span class="ctab" onclick="pickNut('upsd.conf',this)">upsd.conf</span>
+<span class="ctab" onclick="pickNut('upsd.users',this)">upsd.users</span>
+<span class="ctab" onclick="pickNut('upsmon.conf',this)">upsmon.conf</span>
+</div>
+<textarea class="cfg" id="nutEd" placeholder="点击加载读取配置..."></textarea>
+</div></div>
+<div class="pnl"><div class="pt"><span>NUT 配置模板</span></div>
+<div class="pb" style="font-size:13px;line-height:1.8;color:var(--t2)">
+<p><b>ups.conf</b> — UPS 设备连接</p>
+<pre style="background:#0b1120;padding:12px;border-radius:4px;margin:8px 0;font-size:12px">[ups]
+driver = usbhid-ups
+port = auto
+desc = &quot;Main UPS&quot;</pre>
+<p><b>upsd.conf</b> — 守护进程监听</p>
+<pre style="background:#0b1120;padding:12px;border-radius:4px;margin:8px 0;font-size:12px">LISTEN 127.0.0.1 3493
+LISTEN 0.0.0.0 3493</pre>
+<p><b>upsd.users</b> — 用户认证</p>
+<pre style="background:#0b1120;padding:12px;border-radius:4px;margin:8px 0;font-size:12px">[monuser]
+password = secret
+upsmon master</pre>
+<p><b>upsmon.conf</b> — 监控与关机</p>
+<pre style="background:#0b1120;padding:12px;border-radius:4px;margin:8px 0;font-size:12px">MONITOR ups@localhost 1 monuser secret master
+SHUTDOWNCMD &quot;/sbin/shutdown -h +0&quot;
+POLLFREQ 5
+POLLFREQALERT 3
+HOSTSYNC 15
+WARNAT 30
+DEADTIME 15
+POWERDOWNFLAG /etc/killpower</pre>
+</div></div>
+</div>
+
+<div class="tc" id="Tapc">
+<div class="pnl"><div class="pt"><span>apcupsd 配置</span>
+<div><button class="btn btn-sm btn-p" onclick="loadApc()">加载</button><button class="btn btn-sm btn-s" onclick="saveApc()">保存</button><button class="btn btn-sm" onclick="restartApc()">重启</button></div>
+</div><div class="pb">
+<textarea class="cfg" id="apcEd" style="min-height:400px" placeholder="点击加载读取 apcupsd.conf..."></textarea>
+</div></div>
+<div class="pnl"><div class="pt"><span>apcupsd 快速配置</span></div>
+<div class="pb" style="font-size:13px;line-height:1.8;color:var(--t2)">
+<pre style="background:#0b1120;padding:12px;border-radius:4px;margin:8px 0;font-size:12px">UPSCABLE usb
+UPSTYPE usb
+DEVICE
+POLLTIME 10
+BATTERYLEVEL 30
+MINUTES 5
+TIMEOUT 0
+ANNOY 300
+ANNOYDELAY 60
+NOLOGON disable
+KILLDELAY 10
+NETSERVER on
+NISIP 0.0.0.0
+NISPORT 3551</pre>
+<p style="margin-top:8px">BATTERYLEVEL=电池百分比触发 MINUTES=剩余分钟触发 TIMEOUT=断电最大等待秒数</p>
+</div></div>
+</div>
+
+<div class="tc" id="Tvms">
+<div class="pnl"><div class="pt"><span>虚拟机/容器</span>
+<div><button class="btn btn-sm btn-p" onclick="loadVMs()">刷新</button><button class="btn btn-sm" onclick="showModal()">安全关机</button></div>
+</div><div class="pb" id="vmList"><div class="emp">点击刷新加载列表</div></div></div>
+<div class="pnl"><div class="pt"><span>断电关机流程</span></div>
+<div class="pb" style="font-size:13px;line-height:1.8;color:var(--t2)">
+<p><b>NUT 方案：</b></p>
+<ol style="margin:8px 0 8px 20px">
+<li>UPS 检测市电中断，通过 USB/串口通知 PVE</li>
+<li>upsmon 检测电量低于阈值 (如 30%)</li>
+<li>upsmon 执行 SHUTDOWNCMD 触发关机脚本</li>
+<li>脚本依次关闭所有 VM (qm shutdown) 和 CT (pct shutdown)</li>
+<li>宿主机执行 shutdown -h now</li>
+<li>市电恢复后 PVE 自动启动 (BIOS 通电自启)</li>
+</ol>
+<p><b>apcupsd 方案：</b> apccontrol 脚本调用自定义关机逻辑</p>
+</div></div>
+</div>
+
+<div class="tc" id="Tlog">
+<div class="pnl"><div class="pt"><span>事件日志</span><div><button class="btn btn-sm" onclick="clrLog()">清空</button></div></div>
+<div class="pb"><div class="elog" id="evtLog"><div class="e"><span class="t">[启动]</span><span class="m i">PVE UPS 管理器已启动</span></div></div></div></div>
+</div>
+
+<div class="tc" id="Tset">
+<div class="pnl"><div class="pt"><span>系统信息</span></div>
+<div class="pb" id="sysInfo"><div class="emp">加载中...</div></div></div>
+<div class="pnl"><div class="pt"><span>测试工具</span></div>
+<div class="pb">
+<p style="font-size:13px;color:var(--t2);margin-bottom:12px">模拟断电关机信号，测试 UPS 工具与 PVE 集成。</p>
+<button class="btn btn-d btn-sm" onclick="sendFSD()">发送 NUT FSD 信号</button>
+</div></div>
+</div>
+
+</div>
+
+<div class="modal-o" id="modal">
+<div class="modal">
+<h3>安全关机</h3>
+<label>模式</label>
+<select id="shutMode"><option value="vms_only">仅关闭 VM/CT</option><option value="all">VM/CT + 宿主机</option></select>
+<label>延迟 (秒，全部关闭模式)</label>
+<input type="number" id="shutDelay" value="60" min="10">
+<div class="ma"><button class="btn" onclick="hideModal()">取消</button><button class="btn btn-d" onclick="doShutdown()">关机</button></div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const S={cur:"ups.conf",cfgs:{}};
+const B=window.location.origin;
+
+function toast(m,e){const t=document.getElementById("toast");t.textContent=m;t.style.borderColor=e?"var(--rd)":"var(--gr)";t.classList.add("sh");setTimeout(()=>t.classList.remove("sh"),3000)}
+function log(m,t){const l=document.getElementById("evtLog");const e=document.createElement("div");e.className="e";const n=new Date();e.innerHTML='<span class="t">['+n.toLocaleTimeString("zh-CN",{hour12:false})+']</span><span class="m '+(t||"i")+'">'+m+"</span>";l.appendChild(e);l.scrollTop=l.scrollHeight}
+function clrLog(){document.getElementById("evtLog").innerHTML="";log("日志已清空","i")}
+function switchTab(n){document.querySelectorAll(".tab").forEach(t=>t.classList.remove("act"));document.querySelectorAll(".tc").forEach(t=>t.classList.remove("act"));document.querySelector('.tab[onclick*="'+n+'"]').classList.add("act");document.getElementById("T"+n).classList.add("act")}
+
+function pickNut(f,el){S.cur=f;document.querySelectorAll("#nutFiles .ctab").forEach(t=>t.classList.remove("act"));el.classList.add("act");document.getElementById("nutEd").value=S.cfgs[f]||"// 尚未加载 "+f}
+function loadNut(){log("加载 NUT 配置...","i");fetch(B+"/api/nut/config").then(r=>r.json()).then(d=>{if(d.success){S.cfgs=d.configs||{};const ed=document.getElementById("nutEd");ed.value=S.cfgs[S.cur]||"# "+S.cur+" 未找到";log("NUT 加载完成","ok");toast("已加载")}}).catch(e=>{log("加载失败: "+e.message,"e");toast("加载失败",true)})}
+function saveNut(){const v=document.getElementById("nutEd").value;log("保存 "+S.cur+"...","i");fetch(B+"/api/nut/config",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({filename:S.cur,content:v})}).then(r=>r.json()).then(d=>{if(d.success){S.cfgs[S.cur]=v;log(S.cur+" 已保存","ok");toast("已保存")}else{log("保存失败: "+d.message,"e");toast("保存失败",true)}}).catch(e=>{log("保存失败: "+e.message,"e");toast("保存出错",true)})}
+function restartNut(){log("重启 NUT...","w");fetch(B+"/api/nut/restart",{method:"POST"}).then(r=>r.json()).then(d=>{log(d.success?"NUT 已重启":"重启失败: "+d.message,d.success?"ok":"e");toast(d.success?"已重启":"重启失败",!d.success)}).catch(e=>toast("请求失败",true))}
+
+function loadApc(){log("加载 apcupsd...","i");fetch(B+"/api/apcupsd/config").then(r=>r.json()).then(d=>{if(d.success&&d.config){document.getElementById("apcEd").value=d.config;log("apcupsd 已加载","ok")}else{document.getElementById("apcEd").value="# apcupsd 未找到";log("apcupsd 未找到","w")}}).catch(e=>toast("失败: "+e.message,true))}
+function saveApc(){const v=document.getElementById("apcEd").value;log("保存 apcupsd...","i");fetch(B+"/api/apcupsd/config",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({content:v})}).then(r=>r.json()).then(d=>{log(d.success?"已保存":"失败: "+d.message,d.success?"ok":"e");toast(d.success?"已保存":"失败",!d.success)}).catch(e=>toast("出错",true))}
+function restartApc(){log("重启 apcupsd...","w");fetch(B+"/api/apcupsd/restart",{method:"POST"}).then(r=>r.json()).then(d=>{log(d.success?"已重启":"失败: "+d.message,d.success?"ok":"e");toast(d.success?"已重启":"失败",!d.success)}).catch(e=>toast("请求失败",true))}
+
+function loadVMs(){log("获取 VM 列表...","i");document.getElementById("vmList").innerHTML='<div class="emp"><span class="ldr"></span> 加载中...</div>';fetch(B+"/api/pve/list").then(r=>r.json()).then(d=>{if(d.success){renderVMs(d.vms||[],d.containers||[]);log("VM: "+(d.vms||[]).length+" CT: "+(d.containers||[]).length,"ok")}else{document.getElementById("vmList").innerHTML='<div class="emp">'+d.message+'<br><button class="btn btn-sm" onclick="loadVMs()" style="margin-top:8px">重试</button></div>';log("获取失败: "+d.message,"e")}}).catch(e=>{document.getElementById("vmList").innerHTML='<div class="emp">连接失败<br><small>'+e.message+"</small></div>";log("连接失败","e")})}
+function renderVMs(vms,cts){let h='<table class="tbl"><tr><th>ID</th><th>名称</th><th>类型</th><th>状态</th><th>内存</th></tr>';vms.forEach(v=>{const r=v.status==="running";h+="<tr><td>"+v.vmid+"</td><td>"+esc(v.name)+"</td><td>VM</td><td><span class='bdg "+(r?"ok":"no")+"'>"+(r?"● 运行中":"○ 停止")+"</span></td><td>"+esc(v.memory||"N/A")+"</td></tr>"});cts.forEach(c=>{const r=c.status==="running";h+="<tr><td>"+c.vmid+"</td><td>"+esc(c.name)+"</td><td>CT</td><td><span class='bdg "+(r?"ok":"no")+"'>"+(r?"● 运行中":"○ 停止")+"</span></td><td>"+esc(c.memory||"N/A")+"</td></tr>"});h+="</table>";document.getElementById("vmList").innerHTML=h}
+function esc(s){const d=document.createElement("div");d.textContent=s||"";return d.innerHTML}
+function showModal(){document.getElementById("modal").classList.add("sh")}
+function hideModal(){document.getElementById("modal").classList.remove("sh")}
+function doShutdown(){const m=document.getElementById("shutMode").value;const d=parseInt(document.getElementById("shutDelay").value)||60;hideModal();log("执行关机 "+m+" 延迟 "+d+"s...","w");toast("正在关机...");fetch(B+"/api/pve/shutdown",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mode:m,delay:d})}).then(r=>r.json()).then(d=>{log(d.success?"关机已启动":"失败: "+d.message,d.success?"ok":"e");toast(d.success?"已发送":"失败",!d.success)}).catch(e=>toast("请求失败",true))}
+
+function loadSys(){fetch(B+"/api/system/info").then(r=>r.json()).then(d=>{if(d.success){const s=d.system;let h='<table class="tbl" style="font-size:13px">';h+="<tr><td style=width:120px>主机名</td><td><code>"+esc(s.hostname)+"</code></td></tr>";h+="<tr><td>平台</td><td>"+s.platform+" "+s.arch+"</td></tr>";h+="<tr><td>CPU</td><td>"+s.cpus+" 核心</td></tr>";h+="<tr><td>内存</td><td>"+fmtB(s.freeMem)+" / "+fmtB(s.totalMem)+"</td></tr>";h+="<tr><td>运行</td><td>"+fmtU(s.uptime)+"</td></tr></table>";document.getElementById("sysInfo").innerHTML=h}}).catch(()=>{document.getElementById("sysInfo").innerHTML='<div class="emp">本地模式</div>'})}
+function fmtB(b){if(!b)return"0 B";const u=["B","KB","MB","GB","TB"];let i=0;let s=b;while(s>=1024&&i<4){s/=1024;i++}return s.toFixed(1)+" "+u[i]}
+function fmtU(s){const d=Math.floor(s/86400);const h=Math.floor((s%86400)/3600);const m=Math.floor((s%3600)/60);let r="";if(d)r+=d+"天 ";if(h)r+=h+"小时 ";r+=m+"分钟";return r}
+function sendFSD(){if(!confirm("发送 NUT FSD 信号？模拟断电关机。"))return;log("发送 FSD...","w");toast("发送 FSD...");fetch(B+"/api/pve/test-nut-shutdown",{method:"POST"}).then(r=>r.json()).then(d=>{log("FSD: "+(d.message||"已发送"),"ok");toast("FSD 已发送")}).catch(e=>toast("失败",true))}
+function refreshAll(){log("刷新所有...","i");loadNut();loadApc();loadVMs()}
+
+function checkTools(){fetch(B+"/api/system/tools").then(r=>r.json()).then(d=>{const st=document.getElementById("connSt");const tl=document.getElementById("activeTool");if(d.success){st.className="bdg ok";st.innerHTML="● 已连接";if(d.hasNUT&&d.hasAPC){tl.textContent="NUT + apcupsd";tl.style.color="var(--gr)"}else if(d.hasNUT){tl.textContent="NUT";tl.style.color="var(--bl)"}else if(d.hasAPC){tl.textContent="apcupsd";tl.style.color="var(--yl)"}else{tl.textContent="未检测到";tl.style.color="var(--tm)"}}}).catch(()=>{document.getElementById("connSt").className="bdg no";document.getElementById("connSt").innerHTML="✕ 未连接"})}
+function checkUps(){fetch(B+"/api/nut/status").then(r=>r.json()).then(d=>{if(d.success&&d.status==="connected"&&d.data){const x=d.data;document.getElementById("upsStatus").textContent="● 在线";document.getElementById("upsStatus").className="vl gr";document.getElementById("upsModel").textContent=x["ups.model"]||x["device.model"]||"UPS";document.getElementById("upsBattery").textContent=x["battery.charge"]||"--%";document.getElementById("upsInputVoltage").textContent=x["input.voltage"]||"-- V";document.getElementById("upsLoad").textContent=x["ups.load"]||"--%";const ld=parseInt(x["ups.load"]);document.getElementById("upsLoad").style.color="var(--"+(ld>80?"rd":ld>50?"yl":"gr")+")"}else{fetch(B+"/api/apcupsd/status").then(r=>r.json()).then(d2=>{if(d2.success&&d2.data){const x=d2.data;document.getElementById("upsStatus").textContent="● 在线";document.getElementById("upsStatus").className="vl gr";document.getElementById("upsModel").textContent=x["MODEL"]||"APC";document.getElementById("upsBattery").textContent=(x["BCHARGE"]||"").trim()||"--%";document.getElementById("upsInputVoltage").textContent=(x["LINEV"]||"").trim()||"-- V";document.getElementById("upsLoad").textContent=(x["LOADPCT"]||"").trim()||"--%"}}).catch(()=>{})}}).catch(()=>{})}
+
+document.addEventListener("DOMContentLoaded",function(){checkTools();checkUps();loadSys();log("仪表板就绪","ok")});
+</script>
+</body>
+</html>
