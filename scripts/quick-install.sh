@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 # PVE UPS Manager - Quick install script v0.2.0
 # Fixes: self-reexec from curl pipe, robust Node.js install, service health check
 
@@ -8,33 +8,33 @@ SCRIPT_URL="https://raw.githubusercontent.com/leafss1022/pve-ups-manager/main/sc
 REPO_URL="https://github.com/leafss1022/pve-ups-manager.git"
 INSTALL_DIR="/opt/pve-ups-manager"
 
-echo "=== PVE UPS Manager 一键部署 (v0.2.0) ==="
+echo "=== PVE UPS Manager 涓€閿儴缃?(v0.2.0) ==="
 echo ""
 
-# ─── Self-reexec: if running from curl pipe, download fresh copy and exec ───
+# 鈹€鈹€鈹€ Self-reexec: if running from curl pipe, download fresh copy and exec 鈹€鈹€鈹€
 # This fixes the core bug: git pull updates repo but in-memory script is old
 if [[ "$0" == /dev/fd/* ]] || [[ "$0" == "/dev/stdin" ]] || [[ -z "$BASH_SOURCE" ]]; then
-    echo "检测到通过 curl 管道运行，正在获取最新脚本..."
+    echo "妫€娴嬪埌閫氳繃 curl 绠￠亾杩愯锛屾鍦ㄨ幏鍙栨渶鏂拌剼鏈?.."
     TMP_SCRIPT=$(mktemp /tmp/pve-ups-install.XXXXXX.sh)
     if curl -fsSL "$SCRIPT_URL" -o "$TMP_SCRIPT" 2>/dev/null; then
         chmod +x "$TMP_SCRIPT"
         exec bash "$TMP_SCRIPT"
     else
-        echo "[警告] 无法下载最新脚本，继续使用当前版本..."
+        echo "[璀﹀憡] 鏃犳硶涓嬭浇鏈€鏂拌剼鏈紝缁х画浣跨敤褰撳墠鐗堟湰..."
     fi
 fi
 
-# ─── Helper: check if a command exists ───
+# 鈹€鈹€鈹€ Helper: check if a command exists 鈹€鈹€鈹€
 has_cmd() { command -v "$1" &>/dev/null; }
 
-# ─── Node.js installation ───
+# 鈹€鈹€鈹€ Node.js installation 鈹€鈹€鈹€
 install_nodejs() {
-    echo "正在安装 Node.js 20.x ..."
+    echo "姝ｅ湪瀹夎 Node.js 20.x ..."
     echo ""
 
     # Method 1: NodeSource apt repository (Debian/Ubuntu/PVE)
     if has_cmd apt-get; then
-        echo "  [1/3] 尝试通过 NodeSource apt 源安装..."
+        echo "  [1/3] 灏濊瘯閫氳繃 NodeSource apt 婧愬畨瑁?.."
         apt-get update -qq 2>/dev/null || true
         apt-get install -y ca-certificates curl gnupg 2>/dev/null || true
         mkdir -p /etc/apt/keyrings 2>/dev/null
@@ -43,22 +43,22 @@ install_nodejs() {
             apt-get update -qq 2>/dev/null || true
             if apt-get install -y nodejs 2>/dev/null; then
                 if has_cmd node && has_cmd npm; then
-                    echo "  ✓ NodeSource 安装成功"
+                    echo "  鉁?NodeSource 瀹夎鎴愬姛"
                     return 0
                 fi
             fi
         fi
-        echo "  ✗ NodeSource 方式失败"
+        echo "  鉁?NodeSource 鏂瑰紡澶辫触"
         echo ""
     fi
 
     # Method 2: Direct binary download from nodejs.org
-    echo "  [2/3] 尝试直接下载 Node.js 二进制包..."
+    echo "  [2/3] 灏濊瘯鐩存帴涓嬭浇 Node.js 浜岃繘鍒跺寘..."
     ARCH=$(uname -m)
     case "$ARCH" in
         x86_64|amd64) NODE_ARCH="linux-x64" ;;
         aarch64|arm64) NODE_ARCH="linux-arm64" ;;
-        *) echo "  ✗ 不支持的架构: $ARCH"; echo ""; return 1 ;;
+        *) echo "  鉁?涓嶆敮鎸佺殑鏋舵瀯: $ARCH"; echo ""; return 1 ;;
     esac
 
     NODE_VERSION="v20.18.0"
@@ -70,16 +70,16 @@ install_nodejs() {
         tar -xf "$TMP_DIR/$NODE_TAR" -C /usr/local --strip-components=1 2>/dev/null
         rm -rf "$TMP_DIR"
         if has_cmd node && has_cmd npm; then
-            echo "  ✓ 二进制包安装成功 (安装到 /usr/local)"
+            echo "  鉁?浜岃繘鍒跺寘瀹夎鎴愬姛 (瀹夎鍒?/usr/local)"
             return 0
         fi
     fi
     rm -rf "$TMP_DIR"
-    echo "  ✗ 二进制包下载失败"
+    echo "  鉁?浜岃繘鍒跺寘涓嬭浇澶辫触"
     echo ""
 
     # Method 3: Try nvm
-    echo "  [3/3] 尝试通过 nvm 安装..."
+    echo "  [3/3] 灏濊瘯閫氳繃 nvm 瀹夎..."
     if ! has_cmd nvm; then
         curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.2.0/install.sh 2>/dev/null | bash 2>/dev/null || true
         export NVM_DIR="$HOME/.nvm"
@@ -89,7 +89,7 @@ install_nodejs() {
         [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
         if nvm install 20 2>/dev/null && nvm use 20 2>/dev/null; then
             if has_cmd node && has_cmd npm; then
-                echo "  ✓ nvm 安装成功"
+                echo "  鉁?nvm 瀹夎鎴愬姛"
                 # Create symlinks so systemd can find node
                 NODE_PATH=$(which node 2>/dev/null)
                 if [ -n "$NODE_PATH" ] && [ ! -f /usr/local/bin/node ]; then
@@ -103,20 +103,20 @@ install_nodejs() {
             fi
         fi
     fi
-    echo "  ✗ nvm 安装失败"
+    echo "  鉁?nvm 瀹夎澶辫触"
     echo ""
     return 1
 }
 
-# ─── Check existing Node.js ───
+# 鈹€鈹€鈹€ Check existing Node.js 鈹€鈹€鈹€
 HAVE_NODE=false
 if has_cmd node; then
     NODE_MAJOR=$(node -v 2>/dev/null | cut -d'.' -f1 | tr -d 'v')
     if [ "$NODE_MAJOR" -ge 18 ] 2>/dev/null; then
         HAVE_NODE=true
-        echo "检测到已安装 Node.js $(node -v)"
+        echo "妫€娴嬪埌宸插畨瑁?Node.js $(node -v)"
     else
-        echo "检测到 Node.js $(node -v) 版本过低 (需要 18+)，将安装新版本..."
+        echo "妫€娴嬪埌 Node.js $(node -v) 鐗堟湰杩囦綆 (闇€瑕?18+)锛屽皢瀹夎鏂扮増鏈?.."
     fi
 fi
 
@@ -124,37 +124,37 @@ if [ "$HAVE_NODE" = false ]; then
     install_nodejs || {
         echo ""
         echo "=========================================="
-        echo "[错误] Node.js 安装失败！"
+        echo "[閿欒] Node.js 瀹夎澶辫触锛?
         echo "=========================================="
-        echo "请手动安装 Node.js 18+ 后重新运行此脚本："
+        echo "璇锋墜鍔ㄥ畨瑁?Node.js 18+ 鍚庨噸鏂拌繍琛屾鑴氭湰锛?
         echo ""
-        echo "  方式1 (Debian/Ubuntu/PVE):"
+        echo "  鏂瑰紡1 (Debian/Ubuntu/PVE):"
         echo "    curl -fsSL https://deb.nodesource.com/setup_20.x | bash -"
         echo "    apt-get install -y nodejs"
         echo ""
-        echo "  方式2 (手动下载):"
-        echo "    访问 https://nodejs.org/en/download/ 下载对应平台安装包"
+        echo "  鏂瑰紡2 (鎵嬪姩涓嬭浇):"
+        echo "    璁块棶 https://nodejs.org/en/download/ 涓嬭浇瀵瑰簲骞冲彴瀹夎鍖?
         echo ""
-        echo "安装完成后重新运行："
+        echo "瀹夎瀹屾垚鍚庨噸鏂拌繍琛岋細"
         echo "  bash <(curl -sL ${SCRIPT_URL})"
         echo ""
         exit 1
     }
 fi
 
-# ─── Verify node and npm are available ───
+# 鈹€鈹€鈹€ Verify node and npm are available 鈹€鈹€鈹€
 if ! has_cmd node; then
-    echo "[错误] Node.js 安装后仍无法找到 node 命令"
-    echo "请检查 PATH 环境变量或手动安装"
+    echo "[閿欒] Node.js 瀹夎鍚庝粛鏃犳硶鎵惧埌 node 鍛戒护"
+    echo "璇锋鏌?PATH 鐜鍙橀噺鎴栨墜鍔ㄥ畨瑁?
     exit 1
 fi
 if ! has_cmd npm; then
-    echo "[错误] npm 未安装。尝试单独安装 npm..."
+    echo "[閿欒] npm 鏈畨瑁呫€傚皾璇曞崟鐙畨瑁?npm..."
     if has_cmd apt-get; then
         apt-get install -y npm 2>/dev/null || true
     fi
     if ! has_cmd npm; then
-        echo "[错误] npm 安装失败，请手动安装"
+        echo "[閿欒] npm 瀹夎澶辫触锛岃鎵嬪姩瀹夎"
         exit 1
     fi
 fi
@@ -163,8 +163,8 @@ echo "Node.js: $(node -v)"
 echo "npm: $(npm -v)"
 echo ""
 
-# ─── Download / update project ───
-echo "正在下载项目..."
+# 鈹€鈹€鈹€ Download / update project 鈹€鈹€鈹€
+echo "姝ｅ湪涓嬭浇椤圭洰..."
 cd /opt
 if [ -d pve-ups-manager ]; then
     cd pve-ups-manager
@@ -174,27 +174,27 @@ else
     git clone "$REPO_URL"
     cd pve-ups-manager
 fi
-echo "  ✓ 项目代码已更新"
+echo "  鉁?椤圭洰浠ｇ爜宸叉洿鏂?
 echo ""
 
-# ─── Install backend dependencies ───
-echo "正在安装后端依赖..."
+# 鈹€鈹€鈹€ Install backend dependencies 鈹€鈹€鈹€
+echo "姝ｅ湪瀹夎鍚庣渚濊禆..."
 cd backend
 # Clean install to avoid stale lock file issues
 rm -rf node_modules 2>/dev/null || true
 npm install --production 2>&1 | tail -5
 if [ ! -d node_modules ]; then
-    echo "[错误] 依赖安装失败"
+    echo "[閿欒] 渚濊禆瀹夎澶辫触"
     exit 1
 fi
-echo "  ✓ 依赖安装完成"
+echo "  鉁?渚濊禆瀹夎瀹屾垚"
 echo ""
 
-# ─── Get node binary path for systemd service ───
+# 鈹€鈹€鈹€ Get node binary path for systemd service 鈹€鈹€鈹€
 NODE_BIN=$(which node)
 
-# ─── Create systemd service ───
-echo "创建系统服务..."
+# 鈹€鈹€鈹€ Create systemd service 鈹€鈹€鈹€
+echo "鍒涘缓绯荤粺鏈嶅姟..."
 cat > /etc/systemd/system/pve-ups-manager.service << EOF
 [Unit]
 Description=PVE UPS Manager
@@ -220,8 +220,8 @@ systemctl daemon-reload
 systemctl enable pve-ups-manager 2>/dev/null || true
 systemctl restart pve-ups-manager
 
-# ─── Wait and check service health ───
-echo "等待服务启动..."
+# 鈹€鈹€鈹€ Wait and check service health 鈹€鈹€鈹€
+echo "绛夊緟鏈嶅姟鍚姩..."
 sleep 3
 
 MAX_RETRIES=5
@@ -237,7 +237,7 @@ while [ $RETRY -lt $MAX_RETRIES ]; do
         fi
     fi
     RETRY=$((RETRY + 1))
-    echo "  等待中... ($RETRY/$MAX_RETRIES)"
+    echo "  绛夊緟涓?.. ($RETRY/$MAX_RETRIES)"
     sleep 2
 done
 
@@ -245,29 +245,29 @@ echo ""
 if [ "$SERVICE_OK" = true ]; then
     HOST_IP=$(hostname -I 2>/dev/null | awk '{print $1}')
     if [ -z "$HOST_IP" ]; then
-        HOST_IP="<你的服务器IP>"
+        HOST_IP="<浣犵殑鏈嶅姟鍣↖P>"
     fi
-    echo "=== 部署成功！ ==="
+    echo "=== 閮ㄧ讲鎴愬姛锛?==="
     echo ""
-    echo "  访问地址: http://$HOST_IP:3456"
-    echo "  管理命令: systemctl status pve-ups-manager"
-    echo "  日志查看: journalctl -u pve-ups-manager -f"
+    echo "  璁块棶鍦板潃: http://$HOST_IP:3456"
+    echo "  绠＄悊鍛戒护: systemctl status pve-ups-manager"
+    echo "  鏃ュ織鏌ョ湅: journalctl -u pve-ups-manager -f"
     echo ""
-    echo "  如需安装 NUT:     bash /opt/pve-ups-manager/scripts/install-nut.sh"
-    echo "  如需安装 apcupsd: bash /opt/pve-ups-manager/scripts/install-apcupsd.sh"
+    echo "  濡傞渶瀹夎 NUT:     bash /opt/pve-ups-manager/scripts/install-nut.sh"
+    echo "  濡傞渶瀹夎 apcupsd: bash /opt/pve-ups-manager/scripts/install-apcupsd.sh"
     echo ""
-    echo "  版本: v0.2.0"
+    echo "  鐗堟湰: v0.2.0"
 else
-    echo "=== 部署完成，但服务可能未正常运行 ==="
+    echo "=== 閮ㄧ讲瀹屾垚锛屼絾鏈嶅姟鍙兘鏈甯歌繍琛?==="
     echo ""
-    echo "  请检查日志排查问题:"
+    echo "  璇锋鏌ユ棩蹇楁帓鏌ラ棶棰?"
     echo "    journalctl -u pve-ups-manager -n 30 --no-pager"
     echo ""
-    echo "  手动启动测试:"
+    echo "  鎵嬪姩鍚姩娴嬭瘯:"
     echo "    cd /opt/pve-ups-manager/backend && node app.js"
     echo ""
-    echo "  常见问题:"
-    echo "    - 端口 3456 被占用: ss -tlnp | grep 3456"
-    echo "    - 权限问题: 确保以 root 运行"
+    echo "  甯歌闂:"
+    echo "    - 绔彛 3456 琚崰鐢? ss -tlnp | grep 3456"
+    echo "    - 鏉冮檺闂: 纭繚浠?root 杩愯"
 fi
 echo ""
