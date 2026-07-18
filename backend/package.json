@@ -1,6 +1,6 @@
 {
   "name": "pve-ups-manager",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "PVE UPS Management System - NUT & apcupsd configuration and monitoring",
   "main": "app.js",
   "scripts": {
