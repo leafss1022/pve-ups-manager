@@ -13,16 +13,24 @@ echo ""
 
 # 鈹€鈹€鈹€ Self-reexec: if running from curl pipe, download fresh copy and exec 鈹€鈹€鈹€
 # This fixes the core bug: git pull updates repo but in-memory script is old
+set +e
 if [[ "$0" == /dev/fd/* ]] || [[ "$0" == "/dev/stdin" ]] || [[ -z "$BASH_SOURCE" ]]; then
-    echo "妫€娴嬪埌閫氳繃 curl 绠￠亾杩愯锛屾鍦ㄨ幏鍙栨渶鏂拌剼鏈?.."
-    TMP_SCRIPT=$(mktemp /tmp/pve-ups-install.XXXXXX.sh)
-    if curl -fsSL "$SCRIPT_URL" -o "$TMP_SCRIPT" 2>/dev/null; then
+    echo "????? curl ?????????????..."
+    if command -v mktemp &>/dev/null; then
+        TMP_SCRIPT=$(mktemp /tmp/pve-ups-install.XXXXXX.sh 2>/dev/null)
+    else
+        TMP_SCRIPT="/tmp/pve-ups-install-$$.sh"
+    fi
+    if [ -n "$TMP_SCRIPT" ] && curl -fsSL "$SCRIPT_URL" -o "$TMP_SCRIPT" 2>/dev/null; then
         chmod +x "$TMP_SCRIPT"
         exec bash "$TMP_SCRIPT"
     else
-        echo "[璀﹀憡] 鏃犳硶涓嬭浇鏈€鏂拌剼鏈紝缁х画浣跨敤褰撳墠鐗堟湰..."
+        echo "[??] ?????????????????..."
     fi
 fi
+set -e
+
+
 
 # 鈹€鈹€鈹€ Helper: check if a command exists 鈹€鈹€鈹€
 has_cmd() { command -v "$1" &>/dev/null; }
