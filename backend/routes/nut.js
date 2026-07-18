@@ -86,20 +86,36 @@ router.get('/status', (req, res) => {
   const nutHost = getNutHost();
   const nutUps = getNutUps();
   const target = nutUps + '@' + nutHost;
-  exec('upsc ' + target + ' 2>&1 || echo "NUT not running or no UPS configured"', (err, stdout, stderr) => {
-    const lines = stdout.split('\n').filter(l => l.trim());
+  exec('upsc ' + target + ' 2>&1', (err, stdout, stderr) => {
+    // upsc outputs data to stdout on success, error to both stdout and stderr on failure
+    const combined = (stdout || '') + (stderr || '');
+    // Check if we got real UPS data (not an error message)
+    const hasRealData = combined.length > 50 && 
+      !combined.includes('Error') && 
+      !combined.includes('failure') && 
+      !combined.includes('not connected') &&
+      !combined.includes('Connection refused');
+    
+    if (!hasRealData) {
+      return res.json({ 
+        success: false, 
+        status: 'disconnected', 
+        message: 'Cannot connect to NUT server at ' + target + '. Output: ' + combined.slice(0, 200),
+        nutHost: nutHost,
+        nutUps: nutUps
+      });
+    }
+    
+    const lines = combined.split('\n').filter(l => l.trim());
     const parsed = {};
     lines.forEach(line => {
-      const parts = line.split(':');
-      if (parts.length >= 2) {
-        parsed[parts[0].trim()] = parts.slice(1).join(':').trim();
+      const idx = line.indexOf(':');
+      if (idx > 0) {
+        parsed[line.slice(0, idx).trim()] = line.slice(idx + 1).trim();
       }
     });
-    const hasData = Object.keys(parsed).length > 0 && !parsed['NUT not running'] && !stdout.includes('not running');
-    if (!hasData) {
-      return res.json({ success: false, status: 'disconnected', message: 'NUT not running or no UPS configured at ' + target, nutHost });
-    }
-    res.json({ success: true, status: 'connected', data: parsed, nutHost });
+    
+    res.json({ success: true, status: 'connected', data: parsed, nutHost: nutHost });
   });
 });
 
