@@ -1,5 +1,5 @@
 #!/bin/bash
-# PVE UPS Manager - Quick install script v0.4.1
+# PVE UPS Manager - Quick install script v0.4.2
 # One-click deployment on Proxmox VE host
 # Supports local NUT / apcupsd and remote NUT (e.g. NAS-mounted UPS)
 
@@ -9,7 +9,7 @@ SCRIPT_URL="https://raw.githubusercontent.com/leafss1022/pve-ups-manager/main/sc
 REPO_URL="https://github.com/leafss1022/pve-ups-manager.git"
 INSTALL_DIR="/opt/pve-ups-manager"
 
-echo "=== PVE UPS Manager 一键部署 (v0.4.1) ==="
+echo "=== PVE UPS Manager 一键部署 (v0.4.2) ==="
 echo ""
 
 # ─── Self-reexec: if running from curl pipe, download fresh copy ───
@@ -324,7 +324,7 @@ if [ "$SERVICE_OK" = true ]; then
     echo ""
     echo "  配置远程 NUT 地址: 编辑 /etc/pve-ups-manager/settings.json"
     echo ""
-    echo "  版本: v0.4.1"
+    echo "  版本: v0.4.2"
 else
     echo "=== 部署完成，但服务可能未正常运行 ==="
     echo ""
