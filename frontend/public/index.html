@@ -1,13 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PVE UPS Manager v0.4.0</title>
+<title>PVE UPS Manager</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0f172a;--bg2:#1e293b;--bgh:#334155;--tc:#f1f5f9;--t2:#94a3b8;--tm:#64748b;--gr:#22c55e;--yl:#eab308;--rd:#ef4444;--bl:#3b82f6;--bd:#334155;--r:8px}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans SC',sans-serif;background:var(--bg);color:var(--tc);min-height:100vh}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans SC",sans-serif;background:var(--bg);color:var(--tc);min-height:100vh}
 .c{max-width:1400px;margin:0 auto;padding:16px}
 .hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 0;margin-bottom:20px;border-bottom:1px solid var(--bd)}
 .hdr h1{font-size:20px;font-weight:600;display:flex;align-items:center;gap:10px}
@@ -18,7 +18,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans S
 .btn-p{background:var(--bl);border-color:var(--bl);color:#fff}
 .btn-d{background:var(--rd);border-color:var(--rd);color:#fff}
 .btn-s{background:var(--gr);border-color:var(--gr);color:#000}
-.btn-w{background:var(--yl);border-color:var(--yl);color:#000}
 .btn-sm{padding:4px 10px;font-size:12px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px}
 .card{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:16px}
@@ -38,7 +37,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans S
 .pnl{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:16px}
 .pt{padding:12px 16px;font-size:14px;font-weight:600;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
 .pb{padding:16px}
-.cfg{width:100%;min-height:200px;background:#0b1120;color:#e2e8f0;border:1px solid var(--bd);border-radius:var(--r);padding:12px;font-family:'Cascadia Code','Fira Code',Consolas,monospace;font-size:13px;line-height:1.6;resize:vertical;tab-size:4}
+.cfg{width:100%;min-height:200px;background:#0b1120;color:#e2e8f0;border:1px solid var(--bd);border-radius:var(--r);padding:12px;font-family:"Cascadia Code","Fira Code",Consolas,monospace;font-size:13px;line-height:1.6;resize:vertical;tab-size:4}
 .cfg:focus{outline:0;border-color:var(--bl)}
 .tbl{width:100%;border-collapse:collapse}
 .tbl th,.tbl td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--bd);font-size:13px}
@@ -47,13 +46,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans S
 .bdg{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:500}
 .bdg.ok{background:rgba(34,197,94,.15);color:var(--gr)}
 .bdg.no{background:rgba(100,116,139,.15);color:var(--tm)}
-.bdg.warn{background:rgba(234,179,8,.15);color:var(--yl)}
-.bdg.err{background:rgba(239,68,68,.15);color:var(--rd)}
 .csel{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
 .ctab{padding:6px 14px;border-radius:999px;background:var(--bg2);border:1px solid var(--bd);color:var(--t2);cursor:pointer;font-size:12px;transition:all .15s}
 .ctab:hover{background:var(--bgh);color:var(--tc)}
 .ctab.act{background:var(--bl);border-color:var(--bl);color:#fff}
-.elog{max-height:300px;overflow-y:auto;font-family:'Cascadia Code',Consolas,monospace;font-size:12px;line-height:1.8}
+.elog{max-height:300px;overflow-y:auto;font-family:"Cascadia Code",Consolas,monospace;font-size:12px;line-height:1.8}
 .elog .e{padding:2px 8px;border-bottom:1px solid rgba(51,65,85,.3);display:flex;gap:8px}
 .elog .t{color:var(--tm);flex-shrink:0}
 .elog .m{color:var(--tc)}
@@ -61,7 +58,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans S
 .elog .m.w{color:var(--yl)}
 .elog .m.e{color:var(--rd)}
 .elog .m.ok{color:var(--gr)}
-.toast{position:fixed;bottom:20px;right:20px;background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:12px 20px;font-size:13px;color:var(--tc);box-shadow:0 4px 6px -1px rgba(0,0,0,.3);z-index:999}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:12px 20px;font-size:13px;color:var(--tc);box-shadow:0 4px 6px -1px rgba(0,0,0,.3);transform:translateY(120%);opacity:0;transition:all .3s;z-index:999}
+.toast.sh{transform:translateY(0);opacity:1}
 .emp{text-align:center;padding:40px 20px;color:var(--tm);font-size:14px}
 .modal-o{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:100;display:none;align-items:center;justify-content:center}
 .modal-o.sh{display:flex}
@@ -70,63 +68,40 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans S
 .modal label{display:block;font-size:13px;color:var(--t2);margin-bottom:4px}
 .modal select,.modal input[type=number]{width:100%;padding:8px 12px;margin-bottom:12px;background:var(--bg);border:1px solid var(--bd);border-radius:4px;color:var(--tc);font-size:13px}
 .ma{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
-#diagResult{width:100%;min-height:50px;max-height:400px;background:#0b1120;color:#e2e8f0;border:1px solid var(--bd);border-radius:var(--r);padding:12px;font-family:'Cascadia Code',Consolas,monospace;font-size:12px;line-height:1.6;overflow-y:auto;white-space:pre-wrap}
-#diagResult.ok{border-color:var(--gr)}#diagResult.err{border-color:var(--rd)}
-.spin{display:inline-block;width:12px;height:12px;border:2px solid var(--t2);border-top-color:var(--bl);border-radius:50%;animation:s .6s linear infinite}
-@keyframes s{to{transform:rotate(360deg)}}
 @media(max-width:768px){.grid{grid-template-columns:repeat(2,1fr)}.c{padding:8px}.hdr h1{font-size:16px}}
 @media(max-width:480px){.grid{grid-template-columns:1fr}.csel{flex-direction:column}.ctab{text-align:center}}
 </style>
 </head>
 <body>
 <div class="c">
+
 <div class="hdr">
-<h1><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="10" y1="8" x2="10" y2="16"/><line x1="14" y1="10" x2="14" y2="14"/></svg> PVE UPS Manager<span>v0.4.0</span></h1>
+<h1><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="10" y1="8" x2="10" y2="16"/><line x1="14" y1="10" x2="14" y2="14"/></svg> PVE UPS 绠＄悊鍣?<span>v0.4.1</span></h1>
 <div class="hdr-act">
-<button class="btn btn-sm" onclick="refreshAll()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> ??</button>
-<span id="connSt" class="bdg" style="font-size:11px">????..</span>
+<button class="btn btn-sm" onclick="refreshAll()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> 鍒锋柊</button>
+<span id="connSt" class="bdg" style="font-size:11px">妫€鏌ヨ繛鎺?..</span>
 </div></div>
+
 <div class="grid" id="stats">
-<div class="card"><div class="lb">UPS ??</div><div class="vl yl" id="upsStatus">???...</div><div class="sb" id="upsModel"></div></div>
-<div class="card"><div class="lb">????</div><div class="vl gr" id="upsBattery">--%</div><div class="sb" id="upsBatteryVoltage"></div></div>
-<div class="card"><div class="lb">????</div><div class="vl bl" id="upsInputVoltage">-- V</div><div class="sb" id="upsOutputVoltage"></div></div>
-<div class="card"><div class="lb">??</div><div class="vl" id="upsLoad">--%</div><div class="sb" id="upsRuntime"></div></div>
-<div class="card"><div class="lb">????</div><div class="vl" id="systemUptime">--</div><div class="sb">PVE ??</div></div>
-<div class="card"><div class="lb">????</div><div class="vl" id="activeTool" style="font-size:16px">???...</div><div class="sb">NUT / apcupsd</div></div>
+<div class="card"><div class="lb">UPS 鐘舵€?/div><div class="vl yl" id="upsStatus">妫€鏌ヤ腑...</div><div class="sb" id="upsModel"></div></div>
+<div class="card"><div class="lb">鐢垫睜鐢甸噺</div><div class="vl gr" id="upsBattery">--%</div><div class="sb" id="upsBatteryVoltage"></div></div>
+<div class="card"><div class="lb">杈撳叆鐢靛帇</div><div class="vl bl" id="upsInputVoltage">-- V</div><div class="sb" id="upsOutputVoltage"></div></div>
+<div class="card"><div class="lb">璐熻浇</div><div class="vl" id="upsLoad">--%</div><div class="sb" id="upsRuntime"></div></div>
+<div class="card"><div class="lb">杩愯鏃堕棿</div><div class="vl" id="systemUptime">--</div><div class="sb">PVE 涓绘満</div></div>
+<div class="card"><div class="lb">褰撳墠宸ュ叿</div><div class="vl" id="activeTool" style="font-size:16px">妫€娴嬩腑...</div><div class="sb">NUT / apcupsd</div></div>
 </div>
+
 <div class="tabs">
-<div class="tab" onclick="switchTab('nut')">NUT ??</div>
-<div class="tab" onclick="switchTab('apc')">apcupsd ??</div>
-<div class="tab" onclick="switchTab('vms')">?????</div>
-<div class="tab act" onclick="switchTab('diag')">??</div>
-<div class="tab" onclick="switchTab('log')">????</div>
-<div class="tab" onclick="switchTab('set')">??</div>
+<div class="tab act" onclick="switchTab('nut')">NUT 閰嶇疆</div>
+<div class="tab" onclick="switchTab('apc')">apcupsd 閰嶇疆</div>
+<div class="tab" onclick="switchTab('vms')">铏氭嫙鏈虹鐞?/div>
+<div class="tab" onclick="switchTab('log')">浜嬩欢鏃ュ織</div>
+<div class="tab" onclick="switchTab('set')">璁剧疆</div>
 </div>
-<div class="tc act" id="Tdiag">
-<div class="pnl"><div class="pt"><span>????</span><div><button class="btn btn-sm btn-p" onclick="runDiagnose()">????</button><button class="btn btn-sm" onclick="copyDiag()">??</button></div></div>
-<div class="pb"><div id="diagResult" class="i">??"????"?? UPS ????????PVE ???????</div></div></div>
-<div class="pnl"><div class="pt"><span>??????</span></div>
-<div class="pb" style="font-size:13px;line-height:1.8;color:var(--t2)">
-<p><b>UPS ????????</b></p>
-<ol style='padding-left:20px;margin:8px 0'>
-<li>?? UPS ??? USB ??? PVE ??</li>
-<li>?????? NUT/apcupsd ?????</li>
-<li>??????: <code>systemctl status nut-server nut-monitor</code></li>
-<li>?? USB ??: <code>lsusb | grep -i ups</code></li>
-<li>??????: <code>journalctl -u nut-server -n 50</code></li>
-<li>???? UPS ????? PVE ??????
-bash /opt/pve-ups-manager/scripts/install-nut.sh</li>
-</ol>
-<p><b>PVE ???????????</b></p>
-<ol style='padding-left:20px;margin:8px 0'>
-<li>???????? PVE ????? Docker?</li>
-<li>?? <code>qm list</code> ? <code>pct list</code> ??????</li>
-<li>???? Docker ????? PVE API ??</li>
-</ol>
-</div></div></div>
-<div class="tc" id="Tnut">
-<div class="pnl"><div class="pt"><span>NUT ????</span>
-<div><button class="btn btn-sm btn-p" onclick="loadNut()">??</button><button class="btn btn-sm btn-s" onclick="saveNut()">??</button><button class="btn btn-sm" onclick="restartNut()">??</button></div>
+
+<div class="tc act" id="Tnut">
+<div class="pnl"><div class="pt"><span>NUT 閰嶇疆鏂囦欢</span>
+<div><button class="btn btn-sm btn-p" onclick="loadNut()">鍔犺浇</button><button class="btn btn-sm btn-s" onclick="saveNut()">淇濆瓨</button><button class="btn btn-sm" onclick="restartNut()">閲嶅惎</button></div>
 </div><div class="pb">
 <div class="csel" id="nutFiles">
 <span class="ctab act" onclick="pickNut('ups.conf',this)">ups.conf</span>
@@ -134,147 +109,143 @@ bash /opt/pve-ups-manager/scripts/install-nut.sh</li>
 <span class="ctab" onclick="pickNut('upsd.users',this)">upsd.users</span>
 <span class="ctab" onclick="pickNut('upsmon.conf',this)">upsmon.conf</span>
 </div>
-<textarea class="cfg" id="nutEd" placeholder="????????..."></textarea>
-</div></div></div>
+<textarea class="cfg" id="nutEd" placeholder="鐐瑰嚮鍔犺浇璇诲彇閰嶇疆..."></textarea>
+</div></div>
+<div class="pnl"><div class="pt"><span>NUT 閰嶇疆妯℃澘</span></div>
+<div class="pb" style="font-size:13px;line-height:1.8;color:var(--t2)">
+<p><b>ups.conf</b> 鈥?UPS 璁惧杩炴帴</p>
+<pre style="background:#0b1120;padding:12px;border-radius:4px;margin:8px 0;font-size:12px">[ups]
+driver = usbhid-ups
+port = auto
+desc = &quot;Main UPS&quot;</pre>
+<p><b>upsd.conf</b> 鈥?瀹堟姢杩涚▼鐩戝惉</p>
+<pre style="background:#0b1120;padding:12px;border-radius:4px;margin:8px 0;font-size:12px">LISTEN 127.0.0.1 3493
+LISTEN 0.0.0.0 3493</pre>
+<p><b>upsd.users</b> 鈥?鐢ㄦ埛璁よ瘉</p>
+<pre style="background:#0b1120;padding:12px;border-radius:4px;margin:8px 0;font-size:12px">[monuser]
+password = secret
+upsmon master</pre>
+<p><b>upsmon.conf</b> 鈥?鐩戞帶涓庡叧鏈?/p>
+<pre style="background:#0b1120;padding:12px;border-radius:4px;margin:8px 0;font-size:12px">MONITOR ups@localhost 1 monuser secret master
+SHUTDOWNCMD &quot;/sbin/shutdown -h +0&quot;
+POLLFREQ 5
+POLLFREQALERT 3
+HOSTSYNC 15
+WARNAT 30
+DEADTIME 15
+POWERDOWNFLAG /etc/killpower</pre>
+</div></div>
+</div>
+
 <div class="tc" id="Tapc">
-<div class="pnl"><div class="pt"><span>apcupsd ??</span>
-<div><button class="btn btn-sm btn-p" onclick="loadApc()">??</button><button class="btn btn-sm btn-s" onclick="saveApc()">??</button><button class="btn btn-sm" onclick="restartApc()">??</button></div>
+<div class="pnl"><div class="pt"><span>apcupsd 閰嶇疆</span>
+<div><button class="btn btn-sm btn-p" onclick="loadApc()">鍔犺浇</button><button class="btn btn-sm btn-s" onclick="saveApc()">淇濆瓨</button><button class="btn btn-sm" onclick="restartApc()">閲嶅惎</button></div>
 </div><div class="pb">
-<textarea class="cfg" id="apcEd" style="min-height:400px" placeholder="?????? apcupsd.conf..."></textarea>
-</div></div></div>
+<textarea class="cfg" id="apcEd" style="min-height:400px" placeholder="鐐瑰嚮鍔犺浇璇诲彇 apcupsd.conf..."></textarea>
+</div></div>
+<div class="pnl"><div class="pt"><span>apcupsd 蹇€熼厤缃?/span></div>
+<div class="pb" style="font-size:13px;line-height:1.8;color:var(--t2)">
+<pre style="background:#0b1120;padding:12px;border-radius:4px;margin:8px 0;font-size:12px">UPSCABLE usb
+UPSTYPE usb
+DEVICE
+POLLTIME 10
+BATTERYLEVEL 30
+MINUTES 5
+TIMEOUT 0
+ANNOY 300
+ANNOYDELAY 60
+NOLOGON disable
+KILLDELAY 10
+NETSERVER on
+NISIP 0.0.0.0
+NISPORT 3551</pre>
+<p style="margin-top:8px">BATTERYLEVEL=鐢垫睜鐧惧垎姣旇Е鍙?MINUTES=鍓╀綑鍒嗛挓瑙﹀彂 TIMEOUT=鏂數鏈€澶х瓑寰呯鏁?/p>
+</div></div>
+</div>
+
 <div class="tc" id="Tvms">
-<div class="pnl"><div class="pt"><span>???/????</span><div><button class="btn btn-sm btn-p" onclick="loadVMs()">??</button><button class="btn btn-sm btn-d" onclick="showModal()">????</button><button class="btn btn-sm btn-w" onclick="sendFSD()">?? NUT FSD ??</button></div></div>
-<div class="pb" id="vmList"><div class="emp">?????? VM ??</div></div></div>
+<div class="pnl"><div class="pt"><span>铏氭嫙鏈?瀹瑰櫒</span>
+<div><button class="btn btn-sm btn-p" onclick="loadVMs()">鍒锋柊</button><button class="btn btn-sm" onclick="showModal()">瀹夊叏鍏虫満</button></div>
+</div><div class="pb" id="vmList"><div class="emp">鐐瑰嚮鍒锋柊鍔犺浇鍒楄〃</div></div></div>
+<div class="pnl"><div class="pt"><span>鏂數鍏虫満娴佺▼</span></div>
+<div class="pb" style="font-size:13px;line-height:1.8;color:var(--t2)">
+<p><b>NUT 鏂规锛?/b></p>
+<ol style="margin:8px 0 8px 20px">
+<li>UPS 妫€娴嬪競鐢典腑鏂紝閫氳繃 USB/涓插彛閫氱煡 PVE</li>
+<li>upsmon 妫€娴嬬數閲忎綆浜庨槇鍊?(濡?30%)</li>
+<li>upsmon 鎵ц SHUTDOWNCMD 瑙﹀彂鍏虫満鑴氭湰</li>
+<li>鑴氭湰渚濇鍏抽棴鎵€鏈?VM (qm shutdown) 鍜?CT (pct shutdown)</li>
+<li>瀹夸富鏈烘墽琛?shutdown -h now</li>
+<li>甯傜數鎭㈠鍚?PVE 鑷姩鍚姩 (BIOS 閫氱數鑷惎)</li>
+</ol>
+<p><b>apcupsd 鏂规锛?/b> apccontrol 鑴氭湰璋冪敤鑷畾涔夊叧鏈洪€昏緫</p>
+</div></div>
 </div>
+
 <div class="tc" id="Tlog">
-<div class="pnl"><div class="pt"><span>????</span><div><button class="btn btn-sm" onclick="clrLog()">??</button></div></div>
-<div class="elog" id="evtLog"><div class="e"><span class="t">[--:--:--]</span><span class="m i">?????</span></div></div></div>
+<div class="pnl"><div class="pt"><span>浜嬩欢鏃ュ織</span><div><button class="btn btn-sm" onclick="clrLog()">娓呯┖</button></div></div>
+<div class="pb"><div class="elog" id="evtLog"><div class="e"><span class="t">[鍚姩]</span><span class="m i">PVE UPS 绠＄悊鍣ㄥ凡鍚姩</span></div></div></div></div>
 </div>
+
 <div class="tc" id="Tset">
-<div class="pnl"><div class="pt"><span>????</span></div>
-<div class="pb" id="sysInfo"><div class="emp">???...</div></div></div>
+<div class="pnl"><div class="pt"><span>绯荤粺淇℃伅</span></div>
+<div class="pb" id="sysInfo"><div class="emp">鍔犺浇涓?..</div></div></div>
+<div class="pnl"><div class="pt"><span>娴嬭瘯宸ュ叿</span></div>
+<div class="pb">
+<p style="font-size:13px;color:var(--t2);margin-bottom:12px">妯℃嫙鏂數鍏虫満淇″彿锛屾祴璇?UPS 宸ュ叿涓?PVE 闆嗘垚銆?/p>
+<button class="btn btn-d btn-sm" onclick="sendFSD()">鍙戦€?NUT FSD 淇″彿</button>
+</div></div>
 </div>
+
 </div>
+
 <div class="modal-o" id="modal">
 <div class="modal">
-<h3>????</h3>
-<label>??</label>
-<select id="shutMode"><option value="vms_only">??? VM/CT</option><option value="all">VM/CT + ???</option></select>
-<label>?? (????????)</label>
+<h3>瀹夊叏鍏虫満</h3>
+<label>妯″紡</label>
+<select id="shutMode"><option value="vms_only">浠呭叧闂?VM/CT</option><option value="all">VM/CT + 瀹夸富鏈?/option></select>
+<label>寤惰繜 (绉掞紝鍏ㄩ儴鍏抽棴妯″紡)</label>
 <input type="number" id="shutDelay" value="60" min="10">
-<div class="ma"><button class="btn" onclick="hideModal()">??</button><button class="btn btn-d" onclick="doShutdown()">??</button></div>
+<div class="ma"><button class="btn" onclick="hideModal()">鍙栨秷</button><button class="btn btn-d" onclick="doShutdown()">鍏虫満</button></div>
 </div></div>
+
 <div class="toast" id="toast"></div>
+
 <script>
-var S={cur:'ups.conf',cfgs:{}};
-var B=window.location.origin;var activeTool="none";
-var socket = io(B);
+const S={cur:"ups.conf",cfgs:{}};
+const B=window.location.origin;
 
-function toast(m,e){var t=document.getElementById('toast');t.textContent=m;t.style.borderColor=e?'var(--rd)':'var(--gr)';t.classList.add('sh');setTimeout(function(){t.classList.remove('sh')},3000)}
-function log(m,t){var l=document.getElementById('evtLog');var e=document.createElement('div');e.className='e';var n=new Date();e.innerHTML='<span class="t">['+n.toLocaleTimeString('zh-CN',{hour12:false})+']</span><span class="m '+(t||'i')+'">'+m+'</span>';l.appendChild(e);l.scrollTop=l.scrollHeight}
-function clrLog(){document.getElementById('evtLog').innerHTML='';log('?????','i')}
-function switchTab(n){document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('act')});document.querySelectorAll('.tc').forEach(function(t){t.classList.remove('act')});document.querySelectorAll('.tab').forEach(function(t){if(t.textContent.includes(n)||t.getAttribute('onclick').includes(n))t.classList.add('act')});document.getElementById('T'+n).classList.add('act')}
+function toast(m,e){const t=document.getElementById("toast");t.textContent=m;t.style.borderColor=e?"var(--rd)":"var(--gr)";t.classList.add("sh");setTimeout(()=>t.classList.remove("sh"),3000)}
+function log(m,t){const l=document.getElementById("evtLog");const e=document.createElement("div");e.className="e";const n=new Date();e.innerHTML='<span class="t">['+n.toLocaleTimeString("zh-CN",{hour12:false})+']</span><span class="m '+(t||"i")+'">'+m+"</span>";l.appendChild(e);l.scrollTop=l.scrollHeight}
+function clrLog(){document.getElementById("evtLog").innerHTML="";log("鏃ュ織宸叉竻绌?,"i")}
+function switchTab(n){document.querySelectorAll(".tab").forEach(t=>t.classList.remove("act"));document.querySelectorAll(".tc").forEach(t=>t.classList.remove("act"));document.querySelector('.tab[onclick*="'+n+'"]').classList.add("act");document.getElementById("T"+n).classList.add("act")}
 
-function runDiagnose(){
-  var r=document.getElementById('diagResult');
-  r.className='i';r.innerHTML='<span class="spin"></span> ?????...';
-  fetch(B+'/api/diagnose/full').then(function(res){return res.json()}).then(function(d){
-    if(d.success){
-      var diag=d.diagnose;
-      var lines=[];
-      lines.push('=== PVE UPS Manager ???? ===');
-      lines.push('??: '+diag.ts);
-      lines.push('??: '+diag.elapsed+'ms');
-      lines.push('');
-      lines.push('--- ???? ---');
-      lines.push('??: '+diag.system.hostname+' ('+diag.system.platform+' '+diag.system.arch+')');
-      lines.push('CPU: '+diag.system.cpus+' ?, Node: '+diag.system.node);
-      lines.push('????: '+diag.system.whoami);
-      lines.push('??: NUT='+(diag.system.paths.nut?'?':'?')+' APC='+(diag.system.paths.apc?'?':'?')+' PVE='+(diag.system.paths.pve?'?':'?')+' /opt='+(diag.system.paths.opt?'?':'?'));
-      lines.push('');
-      lines.push('--- PVE ---');
-      lines.push('? PVE ??: '+(diag.pve.isPVE?'?':'?'));
-      if(diag.pve.version) lines.push('??: '+diag.pve.version);
-      lines.push('??: qm='+(diag.pve.commands.qm?'?':'?')+' pct='+(diag.pve.commands.pct?'?':'?')+' pvesh='+(diag.pve.commands.pvesh?'?':'?'));
-      lines.push('? Docker ?: '+(diag.pve.inDocker?'?':'?'));
-      lines.push('');
-      lines.push('--- NUT ---');
-      lines.push('???: '+(diag.nut.installed?'?':'?'));
-      lines.push('??: nut-server='+diag.nut.services['nut-server']+' nut-monitor='+diag.nut.services['nut-monitor']+' nut-client='+diag.nut.services['nut-client']);
-      lines.push('????: ups.conf='+(diag.nut.configs['ups.conf']?'?':'?')+' upsd.conf='+(diag.nut.configs['upsd.conf']?'?':'?')+' upsd.users='+(diag.nut.configs['upsd.users']?'?':'?')+' upsmon.conf='+(diag.nut.configs['upsmon.conf']?'?':'?'));
-      lines.push('upsc ??: '+(diag.nut.upsc&&diag.nut.upsc.connected?'? ???':'? ???'));
-      lines.push('');
-      lines.push('--- apcupsd ---');
-      lines.push('???: '+(diag.apc.installed?'?':'?'));
-      lines.push('??: apcupsd='+diag.apc.services.apcupsd);
-      lines.push('????: '+(diag.apc.config?'? ???':'? ???'));
-      lines.push('apcaccess ??: '+(diag.apc.apcaccess&&diag.apc.apcaccess.connected?'? ???':'? ???'));
-      lines.push('');
-      if(diag.summary.list.length>0){
-        lines.push('=== ???? ('+diag.summary.count+' ?) ===');
-        for(var i=0;i<diag.summary.list.length;i++){
-          lines.push('  ['+(i+1)+'] '+diag.summary.list[i]);
-        }
-      } else {
-        lines.push('? ?????');
-      }
-      r.textContent=lines.join('\n');
-      r.className=diag.summary.ok?'ok':'err';
-      if(!diag.summary.ok) toast('?? '+diag.summary.count+' ???',true);
-      else toast('?????????');
-    } else { r.textContent='????: '+d.message;r.className='err'; }
-  }).catch(function(e){r.textContent='????: '+e.message;r.className='err';toast('??????',true)});
-}
-function copyDiag(){
-  var r=document.getElementById('diagResult').textContent;
-  if(!r||r.includes('????')){toast('??????',true);return;}
-  navigator.clipboard.writeText(r).then(function(){toast('???')}).catch(function(){toast('????',true)});
-}
-socket.on('activeTool',function(d){activeTool=d.tool;if(d.tool==='none'){document.getElementById('connSt').className='bdg no';document.getElementById('connSt').innerHTML='? ??';}});
-socket.on('nutStatus', function(d){
-  var el=document.getElementById('upsStatus');
-  if(d.connected){
-    el.textContent='? ??';el.className='vl gr';
-    document.getElementById('upsModel').textContent=d.data['ups.model']||d.data['device.model']||'UPS';
-    document.getElementById('upsBattery').textContent=d.data['battery.charge']||'--%';
-    document.getElementById('upsInputVoltage').textContent=d.data['input.voltage']||'-- V';
-    var ld=parseInt(d.data['ups.load']);
-    document.getElementById('upsLoad').textContent=d.data['ups.load']||'--%';
-    document.getElementById('upsLoad').style.color='var(--'+(ld>80?'rd':ld>50?'yl':'gr')+')';
-    document.getElementById('activeTool').textContent='NUT';document.getElementById('activeTool').style.color='var(--bl)';
-  }
-});
-socket.on('apcStatus', function(d){
-  var el=document.getElementById('upsStatus');
-  if(d.connected&&(activeTool==='apc'||activeTool==='none')){
-    el.textContent='? ??';el.className='vl gr';
-    document.getElementById('upsModel').textContent=d.data['MODEL']||'APC UPS';
-    document.getElementById('upsBattery').textContent=(d.data['BCHARGE']||'').trim()||'--%';
-    document.getElementById('upsInputVoltage').textContent=(d.data['LINEV']||'').trim()||'-- V';
-    document.getElementById('upsLoad').textContent=(d.data['LOADPCT']||'').trim()||'--%';
-    document.getElementById('activeTool').textContent='apcupsd';document.getElementById('activeTool').style.color='var(--yl)';
-  }
-});
-function pickNut(f,el){S.cur=f;document.querySelectorAll('#nutFiles .ctab').forEach(function(t){t.classList.remove('act')});el.classList.add('act');document.getElementById('nutEd').value=S.cfgs[f]||'// ???? '+f}
-function loadNut(){log('?? NUT ??...','i');fetch(B+'/api/nut/config').then(function(r){return r.json()}).then(function(d){if(d.success){S.cfgs=d.configs||{};document.getElementById('nutEd').value=S.cfgs[S.cur]||'# '+S.cur+' ???';log('NUT ????','ok');toast('???')}else{toast('????: '+d.message,true)}}).catch(function(e){log('????: '+e.message,'e');toast('????',true)})}
-function saveNut(){var v=document.getElementById('nutEd').value;log('?? '+S.cur+'...','i');fetch(B+'/api/nut/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:S.cur,content:v})}).then(function(r){return r.json()}).then(function(d){if(d.success){S.cfgs[S.cur]=v;log(S.cur+' ???','ok');toast('???')}else{log('????: '+d.message,'e');toast('????',true)}}).catch(function(e){log('????: '+e.message,'e');toast('????',true)})}
-function restartNut(){log('?? NUT...','w');fetch(B+'/api/nut/restart',{method:'POST'}).then(function(r){return r.json()}).then(function(d){log(d.success?'NUT ???':'????: '+d.message,d.success?'ok':'e');toast(d.success?'???':'????',!d.success)}).catch(function(e){toast('????',true)})}
-function loadApc(){log('?? apcupsd...','i');fetch(B+'/api/apcupsd/config').then(function(r){return r.json()}).then(function(d){if(d.success&&d.config){document.getElementById('apcEd').value=d.config;log('apcupsd ???','ok')}else{document.getElementById('apcEd').value='# apcupsd ???';log('apcupsd ???','w')}}).catch(function(e){toast('??: '+e.message,true)})}
-function saveApc(){var v=document.getElementById('apcEd').value;log('?? apcupsd...','i');fetch(B+'/api/apcupsd/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:v})}).then(function(r){return r.json()}).then(function(d){log(d.success?'???':'??: '+d.message,d.success?'ok':'e');toast(d.success?'???':'??',!d.success)}).catch(function(e){toast('??',true)})}
-function restartApc(){log('?? apcupsd...','w');fetch(B+'/api/apcupsd/restart',{method:'POST'}).then(function(r){return r.json()}).then(function(d){log(d.success?'???':'??: '+d.message,d.success?'ok':'e');toast(d.success?'???':'??',!d.success)}).catch(function(e){toast('????',true)})}
-function loadVMs(){log('?? VM ??...','i');document.getElementById('vmList').innerHTML='<div class="emp"><span class="spin"></span> ???..</div>';fetch(B+'/api/pve/list').then(function(r){return r.json()}).then(function(d){if(d.success){var vms=d.vms||[];var cts=d.containers||[];renderVMs(vms,cts);log('VM: '+vms.length+' CT: '+cts.length,'ok')}else{document.getElementById('vmList').innerHTML='<div class="emp">'+d.message+'<br><button class="btn btn-sm" onclick="loadVMs()" style="margin-top:8px">??</button></div>';log('????: '+d.message,'e')}}).catch(function(e){document.getElementById('vmList').innerHTML='<div class="emp">????<br><small>'+e.message+'</small></div>';log('????','e')})}
-function renderVMs(vms,cts){var h='<table class="tbl"><tr><th>ID</th><th>??</th><th>??</th><th>??</th><th>??</th></tr>';vms.forEach(function(v){var r=v.status==='running';h+='<tr><td>'+v.vmid+'</td><td>'+esc(v.name)+'</td><td>VM</td><td><span class="bdg '+(r?'ok':'no')+'">'+(r?'? ???':'? ??')+'</span></td><td>'+esc(v.memory||'N/A')+'</td></tr>'});cts.forEach(function(c){var r=c.status==='running';h+='<tr><td>'+c.vmid+'</td><td>'+esc(c.name)+'</td><td>CT</td><td><span class="bdg '+(r?'ok':'no')+'">'+(r?'? ???':'? ??')+'</span></td><td>'+esc(c.memory||'N/A')+'</td></tr>'});h+='</table>';document.getElementById('vmList').innerHTML=h}
-function esc(s){var d=document.createElement('div');d.textContent=s||'';return d.innerHTML}
-function showModal(){document.getElementById('modal').classList.add('sh')}
-function hideModal(){document.getElementById('modal').classList.remove('sh')}
-function doShutdown(){var m=document.getElementById('shutMode').value;var d=parseInt(document.getElementById('shutDelay').value)||60;hideModal();log('???? '+m+' ?? '+d+'s...','w');toast('????...');fetch(B+'/api/pve/shutdown',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:m,delay:d})}).then(function(r){return r.json()}).then(function(d2){log(d2.success?'?????':'??: '+d2.message,d2.success?'ok':'e');toast(d2.success?'???':'??',!d2.success)}).catch(function(e){toast('????',true)})}
-function sendFSD(){if(!confirm('?? NUT FSD ??????????'))return;log('?? FSD...','w');toast('?? FSD...');fetch(B+'/api/pve/test-nut-shutdown',{method:'POST'}).then(function(r){return r.json()}).then(function(d){log('FSD: '+(d.message||'???'),'ok');toast('FSD ???')}).catch(function(e){toast('??',true)})}
-function loadSys(){fetch(B+'/api/system/info').then(function(r){return r.json()}).then(function(d){if(d.success){var s=d.system;var h='<table class="tbl" style="font-size:13px">';h+='<tr><td style="width:120px">???</td><td><code>'+esc(s.hostname)+'</code></td></tr>';h+='<tr><td>??</td><td>'+s.platform+' '+s.arch+'</td></tr>';h+='<tr><td>CPU</td><td>'+s.cpus+' ??</td></tr>';h+='<tr><td>??</td><td>'+fmtB(s.freeMem)+' / '+fmtB(s.totalMem)+'</td></tr>';h+='<tr><td>??</td><td>'+fmtU(s.uptime)+'</td></tr></table>';document.getElementById('sysInfo').innerHTML=h}}).catch(function(){document.getElementById('sysInfo').innerHTML='<div class="emp">????</div>'})}
-function fmtB(b){if(!b)return'0 B';var u=['B','KB','MB','GB','TB'];var i=0;var s=b;while(s>=1024&&i<4){s/=1024;i++}return s.toFixed(1)+' '+u[i]}
-function fmtU(s){var d=Math.floor(s/86400);var h=Math.floor((s%86400)/3600);var m=Math.floor((s%3600)/60);var r='';if(d)r+=d+'? ';if(h)r+=h+'?? ';r+=m+'??';return r}
-function checkTools(){fetch(B+'/api/system/tools').then(function(r){return r.json()}).then(function(d){var st=document.getElementById("connSt");var tl=document.getElementById("activeTool");if(d.success){st.className="bdg ok";st.innerHTML="? ???";if(d.hasNUT&&d.hasAPC){tl.textContent='NUT + apcupsd';tl.style.color='var(--gr)'}else if(d.hasNUT){tl.textContent='NUT';tl.style.color='var(--bl)'}else if(d.hasAPC){tl.textContent='apcupsd';tl.style.color='var(--yl)'}else{tl.textContent='????';tl.style.color='var(--tm)'}}}).catch(function(){document.getElementById('connSt').className='bdg no';document.getElementById('connSt').innerHTML='? ???'})}
-function refreshAll(){log('????..','i');loadNut();loadApc();loadVMs()}
-document.addEventListener('DOMContentLoaded',function(){checkTools();loadSys();log('????? v0.4.0','ok');runDiagnose()});
+function pickNut(f,el){S.cur=f;document.querySelectorAll("#nutFiles .ctab").forEach(t=>t.classList.remove("act"));el.classList.add("act");document.getElementById("nutEd").value=S.cfgs[f]||"// 灏氭湭鍔犺浇 "+f}
+function loadNut(){log("鍔犺浇 NUT 閰嶇疆...","i");fetch(B+"/api/nut/config").then(r=>r.json()).then(d=>{if(d.success){S.cfgs=d.configs||{};const ed=document.getElementById("nutEd");ed.value=S.cfgs[S.cur]||"# "+S.cur+" 鏈壘鍒?;log("NUT 鍔犺浇瀹屾垚","ok");toast("宸插姞杞?)}}).catch(e=>{log("鍔犺浇澶辫触: "+e.message,"e");toast("鍔犺浇澶辫触",true)})}
+function saveNut(){const v=document.getElementById("nutEd").value;log("淇濆瓨 "+S.cur+"...","i");fetch(B+"/api/nut/config",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({filename:S.cur,content:v})}).then(r=>r.json()).then(d=>{if(d.success){S.cfgs[S.cur]=v;log(S.cur+" 宸蹭繚瀛?,"ok");toast("宸蹭繚瀛?)}else{log("淇濆瓨澶辫触: "+d.message,"e");toast("淇濆瓨澶辫触",true)}}).catch(e=>{log("淇濆瓨澶辫触: "+e.message,"e");toast("淇濆瓨鍑洪敊",true)})}
+function restartNut(){log("閲嶅惎 NUT...","w");fetch(B+"/api/nut/restart",{method:"POST"}).then(r=>r.json()).then(d=>{log(d.success?"NUT 宸查噸鍚?:"閲嶅惎澶辫触: "+d.message,d.success?"ok":"e");toast(d.success?"宸查噸鍚?:"閲嶅惎澶辫触",!d.success)}).catch(e=>toast("璇锋眰澶辫触",true))}
+
+function loadApc(){log("鍔犺浇 apcupsd...","i");fetch(B+"/api/apcupsd/config").then(r=>r.json()).then(d=>{if(d.success&&d.config){document.getElementById("apcEd").value=d.config;log("apcupsd 宸插姞杞?,"ok")}else{document.getElementById("apcEd").value="# apcupsd 鏈壘鍒?;log("apcupsd 鏈壘鍒?,"w")}}).catch(e=>toast("澶辫触: "+e.message,true))}
+function saveApc(){const v=document.getElementById("apcEd").value;log("淇濆瓨 apcupsd...","i");fetch(B+"/api/apcupsd/config",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({content:v})}).then(r=>r.json()).then(d=>{log(d.success?"宸蹭繚瀛?:"澶辫触: "+d.message,d.success?"ok":"e");toast(d.success?"宸蹭繚瀛?:"澶辫触",!d.success)}).catch(e=>toast("鍑洪敊",true))}
+function restartApc(){log("閲嶅惎 apcupsd...","w");fetch(B+"/api/apcupsd/restart",{method:"POST"}).then(r=>r.json()).then(d=>{log(d.success?"宸查噸鍚?:"澶辫触: "+d.message,d.success?"ok":"e");toast(d.success?"宸查噸鍚?:"澶辫触",!d.success)}).catch(e=>toast("璇锋眰澶辫触",true))}
+
+function loadVMs(){log("鑾峰彇 VM 鍒楄〃...","i");document.getElementById("vmList").innerHTML='<div class="emp"><span class="ldr"></span> 鍔犺浇涓?..</div>';fetch(B+"/api/pve/list").then(r=>r.json()).then(d=>{if(d.success){renderVMs(d.vms||[],d.containers||[]);log("VM: "+(d.vms||[]).length+" CT: "+(d.containers||[]).length,"ok")}else{document.getElementById("vmList").innerHTML='<div class="emp">'+d.message+'<br><button class="btn btn-sm" onclick="loadVMs()" style="margin-top:8px">閲嶈瘯</button></div>';log("鑾峰彇澶辫触: "+d.message,"e")}}).catch(e=>{document.getElementById("vmList").innerHTML='<div class="emp">杩炴帴澶辫触<br><small>'+e.message+"</small></div>";log("杩炴帴澶辫触","e")})}
+function renderVMs(vms,cts){let h='<table class="tbl"><tr><th>ID</th><th>鍚嶇О</th><th>绫诲瀷</th><th>鐘舵€?/th><th>鍐呭瓨</th></tr>';vms.forEach(v=>{const r=v.status==="running";h+="<tr><td>"+v.vmid+"</td><td>"+esc(v.name)+"</td><td>VM</td><td><span class='bdg "+(r?"ok":"no")+"'>"+(r?"鈼?杩愯涓?:"鈼?鍋滄")+"</span></td><td>"+esc(v.memory||"N/A")+"</td></tr>"});cts.forEach(c=>{const r=c.status==="running";h+="<tr><td>"+c.vmid+"</td><td>"+esc(c.name)+"</td><td>CT</td><td><span class='bdg "+(r?"ok":"no")+"'>"+(r?"鈼?杩愯涓?:"鈼?鍋滄")+"</span></td><td>"+esc(c.memory||"N/A")+"</td></tr>"});h+="</table>";document.getElementById("vmList").innerHTML=h}
+function esc(s){const d=document.createElement("div");d.textContent=s||"";return d.innerHTML}
+function showModal(){document.getElementById("modal").classList.add("sh")}
+function hideModal(){document.getElementById("modal").classList.remove("sh")}
+function doShutdown(){const m=document.getElementById("shutMode").value;const d=parseInt(document.getElementById("shutDelay").value)||60;hideModal();log("鎵ц鍏虫満 "+m+" 寤惰繜 "+d+"s...","w");toast("姝ｅ湪鍏虫満...");fetch(B+"/api/pve/shutdown",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mode:m,delay:d})}).then(r=>r.json()).then(d=>{log(d.success?"鍏虫満宸插惎鍔?:"澶辫触: "+d.message,d.success?"ok":"e");toast(d.success?"宸插彂閫?:"澶辫触",!d.success)}).catch(e=>toast("璇锋眰澶辫触",true))}
+
+function loadSys(){fetch(B+"/api/system/info").then(r=>r.json()).then(d=>{if(d.success){const s=d.system;let h='<table class="tbl" style="font-size:13px">';h+="<tr><td style=width:120px>涓绘満鍚?/td><td><code>"+esc(s.hostname)+"</code></td></tr>";h+="<tr><td>骞冲彴</td><td>"+s.platform+" "+s.arch+"</td></tr>";h+="<tr><td>CPU</td><td>"+s.cpus+" 鏍稿績</td></tr>";h+="<tr><td>鍐呭瓨</td><td>"+fmtB(s.freeMem)+" / "+fmtB(s.totalMem)+"</td></tr>";h+="<tr><td>杩愯</td><td>"+fmtU(s.uptime)+"</td></tr></table>";document.getElementById("sysInfo").innerHTML=h}}).catch(()=>{document.getElementById("sysInfo").innerHTML='<div class="emp">鏈湴妯″紡</div>'})}
+function fmtB(b){if(!b)return"0 B";const u=["B","KB","MB","GB","TB"];let i=0;let s=b;while(s>=1024&&i<4){s/=1024;i++}return s.toFixed(1)+" "+u[i]}
+function fmtU(s){const d=Math.floor(s/86400);const h=Math.floor((s%86400)/3600);const m=Math.floor((s%3600)/60);let r="";if(d)r+=d+"澶?";if(h)r+=h+"灏忔椂 ";r+=m+"鍒嗛挓";return r}
+function sendFSD(){if(!confirm("鍙戦€?NUT FSD 淇″彿锛熸ā鎷熸柇鐢靛叧鏈恒€?))return;log("鍙戦€?FSD...","w");toast("鍙戦€?FSD...");fetch(B+"/api/pve/test-nut-shutdown",{method:"POST"}).then(r=>r.json()).then(d=>{log("FSD: "+(d.message||"宸插彂閫?),"ok");toast("FSD 宸插彂閫?)}).catch(e=>toast("澶辫触",true))}
+function refreshAll(){log("鍒锋柊鎵€鏈?..","i");loadNut();loadApc();loadVMs()}
+
+function checkTools(){fetch(B+"/api/system/tools").then(r=>r.json()).then(d=>{const st=document.getElementById("connSt");const tl=document.getElementById("activeTool");if(d.success){st.className="bdg ok";st.innerHTML="鈼?宸茶繛鎺?;if(d.hasNUT&&d.hasAPC){tl.textContent="NUT + apcupsd";tl.style.color="var(--gr)"}else if(d.hasNUT){tl.textContent="NUT";tl.style.color="var(--bl)"}else if(d.hasAPC){tl.textContent="apcupsd";tl.style.color="var(--yl)"}else{tl.textContent="鏈娴嬪埌";tl.style.color="var(--tm)"}}}).catch(()=>{document.getElementById("connSt").className="bdg no";document.getElementById("connSt").innerHTML="鉁?鏈繛鎺?})}
+function checkUps(){fetch(B+"/api/nut/status").then(r=>r.json()).then(d=>{if(d.success&&d.status==="connected"&&d.data){const x=d.data;document.getElementById("upsStatus").textContent="鈼?鍦ㄧ嚎";document.getElementById("upsStatus").className="vl gr";document.getElementById("upsModel").textContent=x["ups.model"]||x["device.model"]||"UPS";document.getElementById("upsBattery").textContent=x["battery.charge"]||"--%";document.getElementById("upsInputVoltage").textContent=x["input.voltage"]||"-- V";document.getElementById("upsLoad").textContent=x["ups.load"]||"--%";const ld=parseInt(x["ups.load"]);document.getElementById("upsLoad").style.color="var(--"+(ld>80?"rd":ld>50?"yl":"gr")+")"}else{fetch(B+"/api/apcupsd/status").then(r=>r.json()).then(d2=>{if(d2.success&&d2.data){const x=d2.data;document.getElementById("upsStatus").textContent="鈼?鍦ㄧ嚎";document.getElementById("upsStatus").className="vl gr";document.getElementById("upsModel").textContent=x["MODEL"]||"APC";document.getElementById("upsBattery").textContent=(x["BCHARGE"]||"").trim()||"--%";document.getElementById("upsInputVoltage").textContent=(x["LINEV"]||"").trim()||"-- V";document.getElementById("upsLoad").textContent=(x["LOADPCT"]||"").trim()||"--%"}}).catch(()=>{})}}).catch(()=>{})}
+
+document.addEventListener("DOMContentLoaded",function(){checkTools();checkUps();loadSys();log("浠〃鏉垮氨缁?,"ok")});
 </script>
 </body>
 </html>

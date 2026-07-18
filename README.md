@@ -1,6 +1,6 @@
-# PVE UPS 管理器
+# PVE UPS Manager
 
-在 Proxmox VE (PVE) 中配置 UPS 断电自动关机方案。支持 **NUT (Network UPS Tools)** 和 **apcupsd** 两种主流工具。
+在 Proxmox VE (PVE) 中配置 UPS 断电自动关机方案。支持 **NUT (Network UPS Tools)** 和 **apcupsd** 两种主流工具。支持远程 NUT 服务器（如 UPS 连接在 NAS 上）。
 
 ## 功能
 
@@ -9,8 +9,9 @@
 - 在线编辑 apcupsd 配置文件 (apcupsd.conf)
 - 查看 PVE 虚拟机/容器列表
 - 执行安全关机（关闭所有 VM/CT → 宿主机）
-- Docker 部署支持
+- 支持远程 NUT 服务器（UPS 连接在 NAS 等其他设备）
 - REST API + WebSocket 实时监控
+- 一键部署 + 一键卸载
 
 ## 快速开始
 
@@ -20,7 +21,13 @@
 bash <(curl -sL https://raw.githubusercontent.com/leafss1022/pve-ups-manager/main/scripts/quick-install.sh)
 ```
 
-部署完成后访问 `http://<PVE主机IP>:13456`
+部署过程中可选择 UPS 连接模式：
+1. **远程 NUT 服务器**（推荐：UPS 连接在 NAS 等其他设备）
+2. 本地 USB NUT
+3. 本地 apcupsd
+4. 暂不安装
+
+部署完成后访问 `http://<PVE主机IP>:3456`
 
 ### 方式二：手动运行 (Node.js)
 
@@ -31,16 +38,9 @@ cd backend && npm install && cd ..
 npm start
 ```
 
-访问 http://localhost:13456
+访问 http://localhost:3456
 
-### 方式三：Docker 部署
-
-```bash
-cd docker
-docker-compose up -d
-```
-
-### 方式四：在 PVE 上安装 UPS 客户端
+### 在 PVE 上安装 UPS 客户端
 
 ```bash
 # 安装 NUT
@@ -50,9 +50,36 @@ bash /opt/pve-ups-manager/scripts/install-nut.sh
 bash /opt/pve-ups-manager/scripts/install-apcupsd.sh
 ```
 
+### 卸载
+
+```bash
+bash /opt/pve-ups-manager/scripts/uninstall.sh
+```
+
+## 远程 NUT 服务器配置
+
+如果 UPS 连接在另一台设备（如 NAS）上，PVE 只需安装 nut-client 并通过环境变量或设置文件指定远程 NUT 地址：
+
+### 方式一：部署时配置
+一键部署时选择"远程 NUT 服务器"模式，输入 NAS 的 IP 和 UPS 名称即可。
+
+### 方式二：手动编辑设置文件
+```bash
+# 编辑 /etc/pve-ups-manager/settings.json
+{
+  "nutHost": "192.168.1.100",
+  "nutUps": "ups"
+}
+```
+
+### 方式三：环境变量
+```bash
+NUT_HOST=192.168.1.100 NUT_UPS=ups node app.js
+```
+
 ## 断电自动关机流程
 
-1. UPS 检测市电中断，通过 USB/串口通知 PVE 主机
+1. UPS 检测市电中断，通过 USB/串口通知 NAS 或 PVE
 2. upsmon (NUT) 或 apcupsd 检测电池电量低于阈值
 3. 触发关机脚本，先安全关闭所有虚拟机 (qm shutdown) 和容器 (pct shutdown)
 4. 确认所有 VM/CT 停止后，宿主机执行 shutdown
@@ -61,8 +88,7 @@ bash /opt/pve-ups-manager/scripts/install-apcupsd.sh
 ## 环境要求
 
 - Proxmox VE 7.x / 8.x
-- Node.js 18+（运行 Web 服务，一键部署脚本会自动安装）
-- Docker + Docker Compose（可选）
+- Node.js 18+（一键部署脚本会自动安装）
 
 ## 管理命令
 
@@ -77,11 +103,7 @@ systemctl restart pve-ups-manager
 journalctl -u pve-ups-manager -f
 
 # 卸载
-systemctl stop pve-ups-manager
-systemctl disable pve-ups-manager
-rm -f /etc/systemd/system/pve-ups-manager.service
-systemctl daemon-reload
-rm -rf /opt/pve-ups-manager
+bash /opt/pve-ups-manager/scripts/uninstall.sh
 ```
 
 ## API
@@ -92,6 +114,8 @@ rm -rf /opt/pve-ups-manager
 | /api/nut/config | POST | 保存 NUT 配置 |
 | /api/nut/status | GET | UPS 状态 |
 | /api/nut/restart | POST | 重启 NUT 服务 |
+| /api/nut/settings | GET | 读取 NUT 连接设置 |
+| /api/nut/settings | POST | 保存 NUT 连接设置 |
 | /api/apcupsd/config | GET | 读取 apcupsd 配置 |
 | /api/apcupsd/config | POST | 保存 apcupsd 配置 |
 | /api/apcupsd/status | GET | apcupsd UPS 状态 |
@@ -104,26 +128,28 @@ rm -rf /opt/pve-ups-manager
 ## 截图
 
 Web 管理界面包含：
-
 - 仪表板卡片：UPS 状态、电池电量、输入电压、负载、运行时间
 - NUT 配置编辑器（多文件切换标签）
 - apcupsd 配置编辑器
 - 虚拟机/容器管理列表
 - 事件日志
 - 系统信息面板
+- NUT 连接设置（远程 NUT 地址配置）
 - 安全关机对话框
 
 ## 更新日志
 
-### v0.4.0
+### v0.4.1
 
-- 全面修复乱码问题（BOM/CRLF/中文编码）
-- 新增一键卸载脚本 scripts/uninstall.sh
-- 新增WebSocket自动检测NUT和apcupsd
-- 改进WebSocket检测PVE虚拟机状态
-- 修复nvm URL版本号错误（v0.3.0 -> v0.39.7）
+- **新增** 支持远程 NUT 服务器（如 UPS 连接在 NAS 上）
+- **新增** NUT 连接设置页面，可配置远程 NUT_HOST 和 UPS 名称
+- **新增** 一键卸载脚本 uninstall.sh
+- **移除** Docker 部署方式
+- **优化** 一键部署脚本交互式选择 UPS 连接模式
+- **修复** pct list 命令失败导致整个请求中断的问题（&& → ;）
+- **修复** 远程 NUT 模式下的 UPS 状态读取
 
-### v0.3.0
+### v0.1.1
 
 - 修复一键部署脚本在 curl 管道模式下 Node.js 安装逻辑不生效的问题
 - 新增 Node.js 安装多级回退机制（NodeSource → 二进制包 → nvm）
@@ -133,10 +159,10 @@ Web 管理界面包含：
 - systemd 服务使用动态 node 路径，兼容 nvm 安装
 - 部署后自动检测服务健康状态
 
-### v0.3.0
+### v0.1.0
 
 - 初始版本发布
 
-## 许可证
+## 许可
 
 MIT
