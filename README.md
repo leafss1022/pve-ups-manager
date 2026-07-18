@@ -115,6 +115,14 @@ Web 管理界面包含：
 
 ## 更新日志
 
+### v0.4.0
+
+- 全面修复乱码问题（BOM/CRLF/中文编码）
+- 新增一键卸载脚本 scripts/uninstall.sh
+- 新增WebSocket自动检测NUT和apcupsd
+- 改进WebSocket检测PVE虚拟机状态
+- 修复nvm URL版本号错误（v0.3.0 -> v0.39.7）
+
 ### v0.3.0
 
 - 修复一键部署脚本在 curl 管道模式下 Node.js 安装逻辑不生效的问题
