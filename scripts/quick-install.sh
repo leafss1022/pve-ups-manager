@@ -1,5 +1,5 @@
 #!/bin/bash
-# PVE UPS Manager - Quick install script v0.4.2
+# PVE UPS Manager - Quick install script v0.4.3
 # One-click deployment on Proxmox VE host
 # Supports local NUT / apcupsd and remote NUT (e.g. NAS-mounted UPS)
 
@@ -9,7 +9,7 @@ SCRIPT_URL="https://raw.githubusercontent.com/leafss1022/pve-ups-manager/main/sc
 REPO_URL="https://github.com/leafss1022/pve-ups-manager.git"
 INSTALL_DIR="/opt/pve-ups-manager"
 
-echo "=== PVE UPS Manager 一键部署 (v0.4.2) ==="
+echo "=== PVE UPS Manager 一键部署 (v0.4.3) ==="
 echo ""
 
 # ─── Self-reexec: if running from curl pipe, download fresh copy ───
@@ -109,79 +109,23 @@ install_nodejs() {
 
 # ─── Install UPS client tools (nut-client only for remote UPS mode) ───
 install_ups_tools() {
-    echo "正在安装 UPS 客户端工具..."
+    echo "正在自动安装 UPS 客户端工具 (nut-client)..."
     if has_cmd apt-get; then
         apt-get install -y nut-client nut 2>/dev/null || apt-get install -y nut-client 2>/dev/null || true
     fi
-
-    echo ""
-    echo "检测 UPS 连接方式..."
-    echo ""
-    echo "请选择 UPS 连接模式:"
-    echo "  1) 远程 NUT 服务器（UPS 连接在另一台设备，如 NAS）"
-    echo "     - 只需安装 nut-client，通过 NUT_HOST 连接"
-    echo "  2) 本地 USB NUT（UPS 直接连接本机 USB）"
-    echo "     - 需安装完整的 nut-server + nut-client"
-    echo "  3) 本地 apcupsd（APC UPS 通过 USB 连接本机）"
-    echo "  4) 暂不安装"
-    echo ""
-    read -p "请输入选项 [1-4] (默认 1): " ups_choice
-    ups_choice="${ups_choice:-1}"
-
-    case "$ups_choice" in
-        2)
-            echo "安装完整 NUT (server + client)..."
-            if has_cmd apt-get; then
-                apt-get install -y nut nut-server nut-client
-            fi
-            systemctl enable nut-server nut-monitor 2>/dev/null || true
-            systemctl restart nut-server nut-monitor 2>/dev/null || true
-            echo "✓ NUT server + client 已安装"
-            ;;
-        3)
-            echo "安装 apcupsd..."
-            if has_cmd apt-get; then
-                apt-get install -y apcupsd
-            fi
-            # Install shutdown hook
-            SHUTDOWN_SCRIPT="$INSTALL_DIR/scripts/pve-ups-shutdown.sh"
-            if [ -f "$SHUTDOWN_SCRIPT" ]; then
-                cp "$SHUTDOWN_SCRIPT" /usr/local/bin/pve-ups-shutdown
-                chmod +x /usr/local/bin/pve-ups-shutdown
-            fi
-            systemctl enable apcupsd 2>/dev/null || true
-            echo "✓ apcupsd 已安装"
-            ;;
-        4)
-            echo "跳过 UPS 工具安装"
-            ;;
-        *)
-            echo "安装 nut-client (远程模式)..."
-            if has_cmd apt-get; then
-                apt-get install -y nut-client
-            fi
-
-            # Ask for NUT server address
-            echo ""
-            read -p "请输入 NUT 服务器地址 (默认 192.168.1.100): " nut_host
-            nut_host="${nut_host:-192.168.1.100}"
-
-            read -p "请输入 UPS 名称 (默认 ups): " nut_ups
-            nut_ups="${nut_ups:-ups}"
-
-            # Save settings
-            mkdir -p /etc/pve-ups-manager
-            cat > /etc/pve-ups-manager/settings.json << EOF
+    mkdir -p /etc/pve-ups-manager
+    if [ ! -f /etc/pve-ups-manager/settings.json ]; then
+        cat > /etc/pve-ups-manager/settings.json << 'SETTINGSEOF'
 {
-  "nutHost": "$nut_host",
-  "nutUps": "$nut_ups"
+  "nutHost": "",
+  "nutUps": "ups"
 }
-EOF
-            echo "✓ nut-client 已安装，NUT_HOST=$nut_host, UPS=$nut_ups"
-            echo "  可通过设置页面或编辑 /etc/pve-ups-manager/settings.json 修改"
-            ;;
-    esac
+SETTINGSEOF
+    fi
+    echo "  nut-client 已自动安装"
+    echo "  可通过 Web 设置页面配置 NUT 服务器地址和 UPS 名称"
 }
+
 
 # ══════════════════ Main Install ══════════════════
 
@@ -324,7 +268,7 @@ if [ "$SERVICE_OK" = true ]; then
     echo ""
     echo "  配置远程 NUT 地址: 编辑 /etc/pve-ups-manager/settings.json"
     echo ""
-    echo "  版本: v0.4.2"
+    echo "  版本: v0.4.3"
 else
     echo "=== 部署完成，但服务可能未正常运行 ==="
     echo ""
