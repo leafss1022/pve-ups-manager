@@ -13,7 +13,8 @@ router.get('/info', (req, res) => {
             cpus: os.cpus().length,
             totalMem: os.totalmem(),
             freeMem: os.freemem(),
-            uptime: os.uptime()
+            uptime: os.uptime(),
+            network: os.networkInterfaces()
         };
         res.json({ success: true, system: info, raw: stdout || stderr });
     });
@@ -21,7 +22,7 @@ router.get('/info', (req, res) => {
 
 // ============ GET: Installed UPS Tools ============
 router.get('/tools', (req, res) => {
-    exec("which nut-server upsd upsc upsmon apcupsd apcaccess 2>/dev/null || dpkg -l 2>/dev/null | grep -i nut || dpkg -l 2>/dev/null | grep -i apcupsd || echo not found", (err, stdout, stderr) => {
+    exec('which nut-server upsd upsc upsmon apcupsd apcaccess 2>&1 || dpkg -l | grep -E "nut|apcupsd" 2>&1 || echo "nut not found"', (err, stdout, stderr) => {
         const hasNUT = stdout.includes('nut') || stdout.includes('upsd') || stdout.includes('upsc');
         const hasAPC = stdout.includes('apcupsd') || stdout.includes('apcaccess');
         res.json({ success: true, hasNUT, hasAPC, output: stdout || stderr });
