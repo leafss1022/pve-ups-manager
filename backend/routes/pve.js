@@ -4,7 +4,8 @@ const { exec } = require("child_process");
 
 router.get("/list", (req, res) => {
     const cmd = "qm list 2>&1; echo ---CT---; pct list 2>&1";
-    exec(cmd, (err, stdout, stderr) => {
+    const ENV = Object.assign({}, process.env, { PATH: (process.env.PATH || "") + ":/usr/sbin:/usr/local/sbin" });
+    exec(cmd, { env: ENV }, (err, stdout, stderr) => {
         if (err && !stdout) {
             return res.json({ success: false, message: "This server does not appear to be a PVE host: " + (stderr || err.message) });
         }
