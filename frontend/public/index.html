@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PVE UPS Manager v0.2.0</title>
+<title>PVE UPS Manager v0.3.0</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0f172a;--bg2:#1e293b;--bgh:#334155;--tc:#f1f5f9;--t2:#94a3b8;--tm:#64748b;--gr:#22c55e;--yl:#eab308;--rd:#ef4444;--bl:#3b82f6;--bd:#334155;--r:8px}
@@ -81,7 +81,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans S
 <body>
 <div class="c">
 <div class="hdr">
-<h1><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="10" y1="8" x2="10" y2="16"/><line x1="14" y1="10" x2="14" y2="14"/></svg> PVE UPS Manager<span>v0.2.0</span></h1>
+<h1><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="10" y1="8" x2="10" y2="16"/><line x1="14" y1="10" x2="14" y2="14"/></svg> PVE UPS Manager<span>v0.3.0</span></h1>
 <div class="hdr-act">
 <button class="btn btn-sm" onclick="refreshAll()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> ??</button>
 <span id="connSt" class="bdg" style="font-size:11px">????..</span>
@@ -273,7 +273,7 @@ function fmtB(b){if(!b)return'0 B';var u=['B','KB','MB','GB','TB'];var i=0;var s
 function fmtU(s){var d=Math.floor(s/86400);var h=Math.floor((s%86400)/3600);var m=Math.floor((s%3600)/60);var r='';if(d)r+=d+'? ';if(h)r+=h+'?? ';r+=m+'??';return r}
 function checkTools(){fetch(B+'/api/system/tools').then(function(r){return r.json()}).then(function(d){var st=document.getElementById('connSt');var tl=document.getElementById('activeTool');if(d.success){st.className='bdg ok';st.innerHTML='? ???';if(d.hasNUT&&d.hasAPC){tl.textContent='NUT + apcupsd';tl.style.color='var(--gr)'}else if(d.hasNUT){tl.textContent='NUT';tl.style.color='var(--bl)'}else if(d.hasAPC){tl.textContent='apcupsd';tl.style.color='var(--yl)'}else{tl.textContent='????';tl.style.color='var(--tm)'}}}).catch(function(){document.getElementById('connSt').className='bdg no';document.getElementById('connSt').innerHTML='? ???'})}
 function refreshAll(){log('????..','i');loadNut();loadApc();loadVMs()}
-document.addEventListener('DOMContentLoaded',function(){checkTools();loadSys();log('????? v0.2.0','ok');runDiagnose()});
+document.addEventListener('DOMContentLoaded',function(){checkTools();loadSys();log('????? v0.3.0','ok');runDiagnose()});
 </script>
 </body>
 </html>

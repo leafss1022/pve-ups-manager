@@ -1,6 +1,6 @@
 set +e
 #!/bin/bash
-# PVE UPS Manager - Quick install script v0.2.0
+# PVE UPS Manager - Quick install script v0.3.0
 # Fixes: self-reexec from curl pipe, robust Node.js install, service health check
 
 set -eo pipefail 2>/dev/null || set -e
@@ -9,7 +9,7 @@ SCRIPT_URL="https://raw.githubusercontent.com/leafss1022/pve-ups-manager/main/sc
 REPO_URL="https://github.com/leafss1022/pve-ups-manager.git"
 INSTALL_DIR="/opt/pve-ups-manager"
 
-echo "=== PVE UPS Manager 涓€閿儴缃?(v0.2.0) ==="
+echo "=== PVE UPS Manager 涓€閿儴缃?(v0.3.0) ==="
 echo ""
 
 # 鈹€鈹€鈹€ Self-reexec: if running from curl pipe, download fresh copy and exec 鈹€鈹€鈹€
@@ -90,7 +90,7 @@ install_nodejs() {
     # Method 3: Try nvm
     echo "  [3/3] 灏濊瘯閫氳繃 nvm 瀹夎..."
     if ! has_cmd nvm; then
-        curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.2.0/install.sh 2>/dev/null | bash 2>/dev/null || true
+        curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.3.0/install.sh 2>/dev/null | bash 2>/dev/null || true
         export NVM_DIR="$HOME/.nvm"
         [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
     fi
@@ -265,7 +265,7 @@ if [ "$SERVICE_OK" = true ]; then
     echo "  濡傞渶瀹夎 NUT:     bash /opt/pve-ups-manager/scripts/install-nut.sh"
     echo "  濡傞渶瀹夎 apcupsd: bash /opt/pve-ups-manager/scripts/install-apcupsd.sh"
     echo ""
-    echo "  鐗堟湰: v0.2.0"
+    echo "  鐗堟湰: v0.3.0"
 else
     echo "=== 閮ㄧ讲瀹屾垚锛屼絾鏈嶅姟鍙兘鏈甯歌繍琛?==="
     echo ""
