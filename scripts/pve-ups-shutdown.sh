@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 # PVE UPS Manager - NUT/apcupsd shutdown hook
 # This script safely shuts down all VMs and containers before host shutdown
 # Installed to /usr/local/bin/pve-ups-shutdown
