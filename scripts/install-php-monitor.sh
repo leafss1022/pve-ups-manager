@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+#!/bin/bash
 # PVE UPS Monitor - PHP 监控页安装脚本 v0.6.0
 set -e
 
