@@ -38,28 +38,24 @@ function parseQmList(output) {
     return result;
 }
 
-// pct list output format:
-//   VMID STATUS
-//   200  running
-// VMID=0, STATUS=1
+// pct list output format (PVE 8.x):
+//   VMID NAME STATUS
+//   200  my-ct running
+// VMID=0, NAME=1, STATUS=2
 function parsePctList(output) {
     const lines = output.split("\n").filter(l => l.trim());
     if (lines.length < 2) return [];
     const result = [];
     for (let i = 1; i < lines.length; i++) {
         const parts = lines[i].trim().split(/\s+/);
-        if (parts.length >= 2) {
-            result.push({
-                vmid: parts[0],
-                name: parts[0],
-                status: parts[1],
-                memory: "N/A"
-            });
+        if (parts.length >= 3) {
+            result.push({ vmid: parts[0], name: parts[1], status: parts[2], memory: "N/A" });
+        } else if (parts.length >= 2) {
+            result.push({ vmid: parts[0], name: parts[0], status: parts[1], memory: "N/A" });
         }
     }
     return result;
 }
-
 router.post("/shutdown", (req, res) => {
     const { mode, delay } = req.body;
     const shutdownDelay = delay || 60;
