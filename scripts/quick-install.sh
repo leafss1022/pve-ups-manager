@@ -1,5 +1,5 @@
-#!/bin/bash
-# PVE UPS Manager - Quick install script v0.4.3
+﻿#!/bin/bash
+# PVE UPS Manager - Quick install script v0.6.0
 # One-click deployment on Proxmox VE host
 # Supports local NUT / apcupsd and remote NUT (e.g. NAS-mounted UPS)
 
@@ -9,7 +9,7 @@ SCRIPT_URL="https://raw.githubusercontent.com/leafss1022/pve-ups-manager/main/sc
 REPO_URL="https://github.com/leafss1022/pve-ups-manager.git"
 INSTALL_DIR="/opt/pve-ups-manager"
 
-echo "=== PVE UPS Manager 一键部署 (v0.4.3) ==="
+echo "=== PVE UPS Manager 一键部署 (v0.6.0) ==="
 echo ""
 
 # ─── Self-reexec: if running from curl pipe, download fresh copy ───
@@ -81,7 +81,7 @@ install_nodejs() {
     # Method 3: nvm
     echo "  [3/3] 尝试通过 nvm 安装..."
     if ! has_cmd nvm; then
-        curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh 2>/dev/null | bash 2>/dev/null || true
+        curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.6.0/install.sh 2>/dev/null | bash 2>/dev/null || true
         export NVM_DIR="$HOME/.nvm"
         [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
     fi
@@ -268,7 +268,7 @@ if [ "$SERVICE_OK" = true ]; then
     echo ""
     echo "  配置远程 NUT 地址: 编辑 /etc/pve-ups-manager/settings.json"
     echo ""
-    echo "  版本: v0.4.3"
+    echo "  版本: v0.6.0"
 else
     echo "=== 部署完成，但服务可能未正常运行 ==="
     echo ""
