@@ -76,7 +76,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans S
 <div class="c">
 
 <div class="hdr">
-<h1><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="10" y1="8" x2="10" y2="16"/><line x1="14" y1="10" x2="14" y2="14"/></svg> PVE UPS 管理器 <span>v0.5.0</span></h1>
+<h1><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="10" y1="8" x2="10" y2="16"/><line x1="14" y1="10" x2="14" y2="14"/></svg> PVE UPS 管理器 <span>v0.6.0</span></h1>
 <div class="hdr-act">
 <button class="btn btn-sm" onclick="refreshAll()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> 刷新</button>
 <span id="connSt" class="bdg" style="font-size:11px">检查连接...</span>
@@ -219,8 +219,10 @@ function refreshAll(){log("刷新所有...","i");loadNut();loadApc();loadVMs()}
 function checkTools(){fetch(B+"/api/system/tools").then(r=>r.json()).then(d=>{const st=document.getElementById("connSt");const tl=document.getElementById("activeTool");if(d.success){st.className="bdg ok";st.innerHTML="● 已连接";if(d.hasNUT&&d.hasAPC){tl.textContent="NUT + apcupsd";tl.style.color="var(--gr)"}else if(d.hasNUT){tl.textContent="NUT";tl.style.color="var(--bl)"}else if(d.hasAPC){tl.textContent="apcupsd";tl.style.color="var(--yl)"}else{tl.textContent="未检测到";tl.style.color="var(--tm)"}}}).catch(()=>{document.getElementById("connSt").className="bdg no";document.getElementById("connSt").innerHTML="✕ 未连接"})}
 function checkUps(){fetch(B+"/api/nut/status").then(r=>r.json()).then(d=>{if(d.success&&d.status==="connected"&&d.data&&Object.keys(d.data).length>0){const x=d.data;document.getElementById('upsStatus').textContent='● 在线';document.getElementById('upsStatus').className='vl gr';document.getElementById('upsModel').textContent=x['ups.model']||x['device.model']||'UPS';document.getElementById('upsBattery').textContent=x['battery.charge']||'--%';document.getElementById('upsInputVoltage').textContent=x['input.voltage']||'-- V';document.getElementById('upsLoad').textContent=x['ups.load']||'--%';const ld=parseInt(x['ups.load']);document.getElementById('upsLoad').style.color='var(--'+(ld>80?'rd':ld>50?'yl':'gr')+')';document.getElementById('activeTool').textContent='NUT';document.getElementById('activeTool').style.color='var(--bl)';log('UPS 在线: '+(x['ups.model']||'UPS')+' 电量 '+(x['battery.charge']||'?'),'ok')}else{const m=d.message||'NUT 未连接';document.getElementById('upsStatus').textContent='● 离线';document.getElementById('upsStatus').className='vl rd';document.getElementById('upsModel').textContent=m.slice(0,60);log('UPS: '+m.slice(0,100),'w');fetch(B+'/api/apcupsd/status').then(r=>r.json()).then(d2=>{if(d2.success&&d2.data&&Object.keys(d2.data).length>0){const x=d2.data;document.getElementById('upsStatus').textContent='● 在线';document.getElementById('upsStatus').className='vl gr';document.getElementById('upsModel').textContent=x['MODEL']||'APC';document.getElementById('upsBattery').textContent=(x['BCHARGE']||'').trim()||'--%';document.getElementById('upsInputVoltage').textContent=(x['LINEV']||'').trim()||'-- V';document.getElementById('upsLoad').textContent=(x['LOADPCT']||'').trim()||'--%';document.getElementById('activeTool').textContent='APC UPS';document.getElementById('activeTool').style.color='var(--yl)';log('APC UPS 在线','ok')}}).catch(()=>{})}}).catch(e=>{log('UPS 检查失败: '+e.message,'e')})}else{fetch(B+"/api/apcupsd/status").then(r=>r.json()).then(d2=>{if(d2.success&&d2.data){const x=d2.data;document.getElementById("upsStatus").textContent="● 在线";document.getElementById("upsStatus").className="vl gr";document.getElementById("upsModel").textContent=x["MODEL"]||"APC";document.getElementById("upsBattery").textContent=(x["BCHARGE"]||"").trim()||"--%";document.getElementById("upsInputVoltage").textContent=(x["LINEV"]||"").trim()||"-- V";document.getElementById("upsLoad").textContent=(x["LOADPCT"]||"").trim()||"--%"}}).catch(()=>{})}}).catch(()=>{})}
 
-document.addEventListener("DOMContentLoaded",function(){checkTools();
-setInterval(function(){checkUps();checkTools();},10000);checkUps();loadSys();log("仪表板就绪","ok")});
+document.addEventListener("DOMContentLoaded",function(){
+checkTools();connectWebSocket();
+setInterval(function(){checkTools();},30000);
+log("仪表板就绪","ok")});
 
 function loadNutSettings(){fetch(B+'/api/nut/settings').then(r=>r.json()).then(d=>{if(d.success){document.getElementById("nutHostInput").value=d.nutHost||"localhost";document.getElementById("nutUpsInput").value=d.nutUps||"ups";document.getElementById("nutSettingsStatus").textContent="✓ 已加载";}else{document.getElementById("nutSettingsStatus").textContent="✗ 加载失败";}}).catch(()=>{document.getElementById("nutSettingsStatus").textContent="✗ 连接失败";})}
 function saveNutSettings(){const h=document.getElementById("nutHostInput").value.trim()||"localhost";const u=document.getElementById("nutUpsInput").value.trim()||"ups";document.getElementById("nutSettingsStatus").textContent="保存中...";fetch(B+"/api/nut/settings",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({nutHost:h,nutUps:u})}).then(r=>r.json()).then(d=>{if(d.success){document.getElementById("nutSettingsStatus").textContent="✓ 已保存，重启服务生效";toast("NUT 连接设置已保存");}else{document.getElementById("nutSettingsStatus").textContent="✗ 保存失败: "+(d.message||"");}}).catch(()=>{document.getElementById("nutSettingsStatus").textContent="✗ 保存失败";})}
@@ -241,6 +243,37 @@ function saveUpsdUsers(){const u=document.getElementById("uuUser").value.trim()|
 function loadApcConf(){fetch(B+"/api/apcupsd/config-form").then(r=>r.json()).then(d=>{if(d.success){document.getElementById("apcCable").value=d.cable||"usb";document.getElementById("apcType").value=d.type||"usb";document.getElementById("apcDevice").value=d.device||"";document.getElementById("apcPoll").value=d.polltime||"10";document.getElementById("apcBattLevel").value=d.battLevel||"30";document.getElementById("apcMinutes").value=d.minutes||"5";document.getElementById("apcStatus").textContent="✓ 已加载";}else{document.getElementById("apcStatus").textContent="✗ 加载失败";}}).catch(()=>{document.getElementById("apcStatus").textContent="✗ 连接失败";})}
 
 function saveApcConf(){const c=document.getElementById("apcCable").value;const t=document.getElementById("apcType").value;const d=document.getElementById("apcDevice").value.trim();const p=document.getElementById("apcPoll").value;const b=document.getElementById("apcBattLevel").value;const m=document.getElementById("apcMinutes").value;document.getElementById("apcStatus").textContent="保存中...";fetch(B+"/api/apcupsd/config-form",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({cable:c,type:t,device:d,polltime:p,battLevel:b,minutes:m})}).then(r=>r.json()).then(d=>{document.getElementById("apcStatus").textContent=d.success?"✓ 已保存":"✗ "+(d.message||"失败");if(d.success)toast("apcupsd.conf 已保存");}).catch(()=>{document.getElementById("apcStatus").textContent="✗ 保存失败";})}
+
+// WebSocket connection for real-time updates
+let wsConnected = false;
+function connectWebSocket() {
+    const ws = new WebSocket((window.location.protocol === 'https:' ? 'wss:' : 'ws:') + '//' + window.location.host);
+    ws.onopen = () => {
+        wsConnected = true;
+        document.getElementById('connSt').className = 'bdg ok';
+        document.getElementById('connSt').innerHTML = '● 已连接';
+        log('WebSocket 已连接', 'ok');
+    };
+    ws.onmessage = (event) => {
+        try {
+            const msg = JSON.parse(event.data);
+            if (msg.type === 'ups-status') {
+                updateUpsUI(msg.data);
+                checkTools();
+            } else if (msg.type === 'system-info') {
+                updateSysInfo(msg.data);
+            }
+        } catch(e) {}
+    };
+    ws.onclose = () => {
+        wsConnected = false;
+        document.getElementById('connSt').className = 'bdg no';
+        document.getElementById('connSt').innerHTML = '\u2715 未连接';
+        setTimeout(connectWebSocket, 5000);
+    };
+    ws.onerror = () => { ws.close(); };
+}
+
 </script>
 </body>
 </html>
