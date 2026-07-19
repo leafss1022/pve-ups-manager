@@ -56,6 +56,18 @@ bash /opt/pve-ups-manager/scripts/install-php-monitor.sh
 - 日志自动轮转（最大 1MB）
 - AJAX 异步数据刷新
 
+
+## 远程 NUT (NAS 场景)
+
+当 UPS 连接在 NAS 或其他服务器上，PVE 通过远程 NUT 协议获取状态：
+
+1. NAS 端安装 NUT (nut-server)，UPS 通过 USB/串口连接
+2. PVE 端仅安装 nut-client (无需 nut-server)
+3. 在 PVE UPS Manager 的"设置"页面配置 NUT 服务器地址 (如 192.168.10.7)
+4. WebSocket 自动推送到前端，无需定时轮询
+
+需确保 PVE 能访问 NAS 的 3493 端口 (NUT 默认端口)。
+
 ## 快速开始
 
 ### 方式一：Node.js 全功能管理器
