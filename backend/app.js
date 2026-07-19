@@ -29,8 +29,53 @@ app.get('*', (req, res) => {
 io.on('connection', (socket) => {
     console.log('Client connected:', socket.id);
 
+    // Periodically push UPS status to the connected client
+    const pushInterval = setInterval(() => {
+        const { exec } = require('child_process');
+        const fs2 = require('fs');
+        const SETTINGS = '/etc/pve-ups-manager/settings.json';
+        let nutHost = process.env.NUT_HOST || 'localhost';
+        let nutUps = process.env.NUT_UPS || 'ups';
+        try {
+            if (fs2.existsSync(SETTINGS)) {
+                const s = JSON.parse(fs2.readFileSync(SETTINGS, 'utf8'));
+                if (s.nutHost) nutHost = s.nutHost;
+                if (s.nutUps) nutUps = s.nutUps;
+            }
+        } catch(e) {}
+        exec('upsc ' + nutUps + '@' + nutHost + ' 2>&1', { timeout: 5000 }, (err, stdout, stderr) => {
+            const data = {};
+            const combined = (stdout || '') + (stderr || '');
+            const lines = combined.split('\n').filter(l => l.trim());
+            lines.forEach(line => {
+                const idx = line.indexOf(':');
+                if (idx > 0) {
+                    data[line.slice(0, idx).trim()] = line.slice(idx + 1).trim();
+                }
+            });
+            const connected = !combined.includes('Error') && Object.keys(data).length > 0;
+            socket.emit('ups-status', { connected, data, timestamp: Date.now() });
+            // Also push system info
+            if (socket._firstPush) {
+                try {
+                    socket.emit('system-info', {
+                        hostname: require('os').hostname(),
+                        uptime: require('os').uptime(),
+                        cpus: require('os').cpus().length,
+                        totalMem: require('os').totalmem(),
+                        freeMem: require('os').freemem()
+                    });
+                } catch(e) {}
+                socket._firstPush = false;
+            }
+        });
+    }, 10000);
+
+    socket._firstPush = true;
+
     socket.on('disconnect', () => {
         console.log('Client disconnected:', socket.id);
+        clearInterval(pushInterval);
     });
 });
 
