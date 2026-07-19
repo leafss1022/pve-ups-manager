@@ -1,6 +1,6 @@
-<?php
+﻿<?php
 /**
- * PVE UPS Monitor v0.5.0
+ * PVE UPS Monitor v0.6.0
  * 完整 UPS 监控系统 - PHP 单文件版
  * 安全修复: 配置文件移出 Web 根目录, 输入过滤, AJAX 异步刷新
  */
@@ -239,7 +239,7 @@ $just_saved = isset($_GET['saved']);
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UPS 监控系统 v0.5.0</title>
+<title>UPS 监控系统 v0.6.0</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#1a1a2e;--card:#16213e;--card2:#1a1a3e;--border:#222;--text:#fff;--text2:#888;--shadow:rgba(0,0,0,0.5);--green:#10b981;--green-h:#059669;--red:#ef4444;--orange:#f59e0b;--blue:#3b82f6;--radius:12px}
@@ -345,7 +345,7 @@ body{font-family:'Segoe UI',-apple-system,Arial,sans-serif;background:var(--bg);
         <text x="50" y="80" text-anchor="middle" font-size="12" font-weight="700" fill="#10b981">UPS</text>
       </svg>
       <div>
-        <h1>UPS 监控系统 <span style="font-size:12px;color:var(--text2);font-weight:400">v0.5.0</span></h1>
+        <h1>UPS 监控系统 <span style="font-size:12px;color:var(--text2);font-weight:400">v0.6.0</span></h1>
         <div class="sub" id="upsModel">连接中...</div>
       </div>
     </div>
