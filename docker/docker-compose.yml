@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  pve-ups-manager:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: pve-ups-manager
+    restart: unless-stopped
+    ports:
+      - "3456:3456"
+    volumes:
+      - /etc/pve-ups-manager:/etc/pve-ups-manager
+      - /var/run/dbus:/var/run/dbus:ro
+      - /dev/bus/usb:/dev/bus/usb:ro
+    network_mode: host
+    environment:
+      - NUT_HOST=${NUT_HOST:-localhost}
+      - NUT_UPS=${NUT_UPS:-ups}
+    privilege: true
