@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+#!/bin/bash
 # PVE UPS Manager - Uninstall Script v0.6.0
 # One-click removal of PVE UPS Manager and optional UPS tools
 
