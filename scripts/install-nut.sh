@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+#!/bin/bash
 # PVE UPS Manager - NUT Installation Script
 # Run on Proxmox VE host
 # Usage: bash /opt/pve-ups-manager/scripts/install-nut.sh
