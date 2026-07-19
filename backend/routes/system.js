@@ -22,8 +22,9 @@ router.get('/info', (req, res) => {
 
 // ============ GET: Installed UPS Tools ============
 router.get('/tools', (req, res) => {
-    exec('which nut-server upsd upsc upsmon apcupsd apcaccess 2>&1 || dpkg -l | grep -E "nut|apcupsd" 2>&1 || echo "nut not found"', (err, stdout, stderr) => {
-        const hasNUT = stdout.includes('nut') || stdout.includes('upsd') || stdout.includes('upsc');
+    // Check for UPS tools. In remote NUT mode (NAS), only nut-client (upsc) is needed locally.
+    exec('which upsc upsmon apcaccess apcupsd 2>&1 || dpkg -l 2>/dev/null | grep -i -E "nut|apcupsd" 2>&1 || echo "no tools found"', (err, stdout, stderr) => {
+        const hasNUT = stdout.includes('nut') || stdout.includes('upsc') || stdout.includes('upsd');
         const hasAPC = stdout.includes('apcupsd') || stdout.includes('apcaccess');
         res.json({ success: true, hasNUT, hasAPC, output: stdout || stderr });
     });
