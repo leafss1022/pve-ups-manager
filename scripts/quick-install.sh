@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+#!/bin/bash
 # PVE UPS Manager - Quick install script v0.6.0
 # One-click deployment on Proxmox VE host
 # Supports local NUT / apcupsd and remote NUT (e.g. NAS-mounted UPS)
